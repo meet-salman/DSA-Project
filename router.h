@@ -4,9 +4,9 @@ class Router
 {
 public:
     int id;
-    bool active; // failed or alive
+    bool status; // failed or alive
 
-    Router(int id) : id(id), active(true) {}
+    Router(int id) : id(id), status(true) {}
 
     int get_id()
     {
@@ -15,12 +15,12 @@ public:
 
     bool get_status()
     {
-        return active;
+        return status;
     }
 
     void display_router_info()
     {
         cout << "Router ID: " << id << endl;
-        cout << "Status   : " << (active ? "ACTIVE" : "FAILED") << endl;
+        cout << "Status   : " << (status ? "ACTIVE" : "FAILED") << endl;
     }
 };

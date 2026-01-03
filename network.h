@@ -41,11 +41,7 @@ public:
 
     bool is_valid_router(int routerId)
     {
-        if (!routersInNetwork.insert(routerId).second)
-            return true;
-
-        routersInNetwork.erase(routerId);
-        return false;
+        return routersInNetwork.insert(routerId).second;
     }
 
     void add_router(int routerId)
@@ -54,6 +50,7 @@ public:
         {
             Router router(routerId);
             routers.push_back(router);
+            links.resize(routersInNetwork.size());
             router.display_router_info();
         }
         else
@@ -63,7 +60,38 @@ public:
         }
     }
 
-    void add_link(int u, int v, int w);
+    void add_link(int routerOne, int routerTwo, int distance)
+    {
+        // Validate router 1
+        if (is_valid_router(routerOne) && routerOne >= 0)
+        {
+            cout << "Invalid router ID\n";
+            routersInNetwork.erase(routerOne);
+            return;
+        }
+
+        // Validate router 2
+        if (is_valid_router(routerTwo) && routerTwo >= 0)
+        {
+            cout << "Invalid router ID\n";
+            routersInNetwork.erase(routerTwo);
+            return;
+        }
+
+        // Validate distance
+        if (distance <= 0)
+        {
+            cout << "Invalid distance\n";
+            return;
+        }
+
+        links[routerOne].push_back(Link(routerOne, distance));
+        links[routerTwo].push_back(Link(routerTwo, distance));
+
+        // cout << "router " << routerOne << " -> " << links[routerTwo][0].to << " at dis " << links[routerTwo][0].distance << " " << links[routerTwo][0].status << endl;
+        // cout << "router " << routerTwo << " -> " << links[routerOne][0].to << " at dis " << links[routerOne][0].distance << " " << links[routerOne][0].status << endl;
+    }
+
     void fail_router(int id);
     void fail_link(int u, int v);
     void restore_router(int id);

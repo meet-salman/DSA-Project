@@ -3,9 +3,12 @@
 class Link
 {
 public:
-    int from, to;
+    int connectedRouter;
     int distance;
-    bool active; // failed or alive
+    bool status; // failed or alive
 
-    Link(int from, int to, int distance) : from(from), to(to), distance(distance), active(true) {}
+    Link(int connectedRouter, int distance) : connectedRouter(connectedRouter), distance(distance), status(true)
+    {
+        cout << "\nRouter " << connectedRouter << " connected successfully!";
+    }
 };
