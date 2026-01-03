@@ -39,6 +39,30 @@ public:
         cout << "------------------------------------------\n";
     }
 
+    bool is_valid_router(int routerId)
+    {
+        if (!routersInNetwork.insert(routerId).second)
+            return true;
+
+        routersInNetwork.erase(routerId);
+        return false;
+    }
+
+    void add_router(int routerId)
+    {
+        if (is_valid_router(routerId))
+        {
+            Router router(routerId);
+            routers.push_back(router);
+            router.display_router_info();
+        }
+        else
+        {
+            cout << "Router already exist\n";
+            return;
+        }
+    }
+
     void add_link(int u, int v, int w);
     void fail_router(int id);
     void fail_link(int u, int v);
