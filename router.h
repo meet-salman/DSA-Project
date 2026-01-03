@@ -9,9 +9,19 @@ public:
 
     Router(int id) : id(id), active(true) {}
 
-    void get_id() {}
+    int get_id()
+    {
+        return id;
+    }
 
-    void get_status() {}
+    bool get_status()
+    {
+        return active;
+    }
 
-    void display_router_info() {}
+    void display_router_info()
+    {
+        cout << "Router ID: " << id << endl;
+        cout << "Status   : " << (active ? "ACTIVE" : "FAILED") << endl;
+    }
 };
