@@ -2,7 +2,7 @@
 
 int main()
 {
-    network();
+    Network n = create_network();
 
     return 0;
 }

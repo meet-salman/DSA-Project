@@ -1,9 +1,16 @@
 #include "network.h"
 
-int network()
+Network create_network()
 {
-    Router r1(1);
-    r1.display_router_info();
+    int networkID;
+    string networkName;
 
-    return 0;
+    cout << "Enter network ID: ";
+    cin >> networkID;
+    cout << "Enter network name: ";
+    cin >> networkName;
+
+    Network n(networkID, networkName);
+
+    return n;
 }
