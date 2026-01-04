@@ -8,3 +8,9 @@
 
 # Ignore folders
 build/
+
+# VS Code
+.vscode/
+
+# Windows junk
+Thumbs.db
