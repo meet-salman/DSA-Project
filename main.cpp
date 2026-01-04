@@ -3,14 +3,71 @@
 int main()
 {
     Network n = create_network();
+    int option;
 
-    // add_router_in_network(n);
-    // add_router_in_network(n);
+    while (true)
+    {
+        cout << "\n===== NETWORK MENU =====\n";
+        cout << "1. Add Routers\n";
+        cout << "2. Add Links\n";
+        cout << "3. Display Network Details\n";
+        cout << "4. Display Links\n";
+        cout << "5. Exit\n";
+        cout << "Enter your option: ";
+        cin >> option;
 
-    add_link_in_network(n);
-    add_link_in_network(n);
+        if (cin.fail()) // handle non-integer input
+        {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "Invalid input! Please enter a number.\n";
+            continue;
+        }
 
-    n.display_links();
+        switch (option)
+        {
+        case 1: // Add routers
+        {
+            int numRouters;
+            cout << "How many routers do you want to add? ";
+            cin >> numRouters;
+
+            for (int i = 0; i < numRouters; i++)
+            {
+                add_router_in_network(n);
+            }
+            break;
+        }
+
+        case 2: // Add links
+        {
+            int numLinks;
+            cout << "How many links do you want to add? ";
+            cin >> numLinks;
+
+            for (int i = 0; i < numLinks; i++)
+            {
+                add_link_in_network(n);
+            }
+            break;
+        }
+
+        case 3: // Display network details
+            n.display_network_details();
+            break;
+
+        case 4: // Display links
+            n.display_links();
+            break;
+
+        case 5: // Exit
+            cout << "Exiting program. Goodbye!\n";
+            return 0;
+
+        default:
+            cout << "Invalid option! Please select 1-5.\n";
+        }
+    }
 
     return 0;
 }
