@@ -68,23 +68,45 @@ public:
             add_router(id);
     }
 
-    void add_link(int routerOne, int routerTwo, int distance)
+    void displayLinks()
+    {
+        for (int i = 0; i < links.size(); i++)
+        {
+            cout << "Router " << i << " connections:\n";
+
+            if (links[i].empty())
+            {
+                cout << "  No links.\n";
+                continue;
+            }
+
+            for (const auto &link : links[i])
+            {
+                cout << "  -> Connected Router: " << link.connectedRouter
+                     << ", Distance: " << link.distance
+                     << ", Status: " << (link.status ? "ACTIVE" : "FAILED") << endl;
+            }
+            cout << endl;
+        }
+    }
+
+    void add_link(int srcRouter, int destRouter, int distance)
     {
         links.resize(routersInNetwork.size());
 
         // Validate router 1
-        if (is_valid_router(routerOne) && routerOne >= 0)
+        if (is_valid_router(srcRouter) && srcRouter >= 0)
         {
             cout << "Invalid router ID\n";
-            routersInNetwork.erase(routerOne);
+            routersInNetwork.erase(srcRouter);
             return;
         }
 
         // Validate router 2
-        if (is_valid_router(routerTwo) && routerTwo >= 0)
+        if (is_valid_router(destRouter) && destRouter >= 0)
         {
             cout << "Invalid router ID\n";
-            routersInNetwork.erase(routerTwo);
+            routersInNetwork.erase(destRouter);
             return;
         }
 
@@ -95,12 +117,17 @@ public:
             return;
         }
 
-        links[routerOne].push_back(Link(routerOne, distance));
-        links[routerTwo].push_back(Link(routerTwo, distance));
-
-        // cout << "\nrouter " << routerOne << " -> " << links[routerTwo][0].connectedRouter << " at dis " << links[routerTwo][0].distance << " " << links[routerTwo][0].status << endl;
-        // cout << "\nrouter " << routerTwo << " -> " << links[routerOne][0].connectedRouter << " at dis " << links[routerOne][0].distance << " " << links[routerOne][0].status << endl;
+        links[srcRouter].push_back(Link(destRouter, distance));
+        displayLinks();
+        // cout << "\nrouter " << srcRouter << " -> " << links[destRouter][0].connectedRouter << " at dis " << links[destRouter][0].distance << " " << links[destRouter][0].status << endl;
     }
+
+    void add_unidirectional_link(int srcRouter, int destRouter, int distance)
+    {
+        add_link(srcRouter, destRouter, distance);
+    }
+
+    void add_bidirectional_link() {}
 
     void fail_router(int id);
     void fail_link(int u, int v);
