@@ -26,8 +26,8 @@ public:
         cout << "Enter no of routers to initialized: ";
         cin >> noOfRouters;
 
-        for (int i = 0; i < noOfRouters; i++)
-            add_router(i);
+        // Initializing routers
+        add_routers_in_bulk(0, noOfRouters - 1);
 
         display_network_details();
     }
@@ -60,6 +60,12 @@ public:
             cout << "Router already exist\n";
             return;
         }
+    }
+
+    void add_routers_in_bulk(int startID, int endID)
+    {
+        for (int id = startID; id <= endID; id++)
+            add_router(id);
     }
 
     void add_link(int routerOne, int routerTwo, int distance)
