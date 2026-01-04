@@ -8,6 +8,7 @@ int main()
     add_router_in_network(n);
 
     add_link_in_network(n);
+    add_link_in_network(n);
 
     return 0;
 }

@@ -48,10 +48,8 @@ public:
     {
         if (is_valid_router(routerId))
         {
-            Router router(routerId);
-            routers.push_back(router);
+            routers.push_back(Router(routerId));
             links.resize(routersInNetwork.size());
-            router.display_router_info();
         }
         else
         {
@@ -88,8 +86,8 @@ public:
         links[routerOne].push_back(Link(routerOne, distance));
         links[routerTwo].push_back(Link(routerTwo, distance));
 
-        // cout << "router " << routerOne << " -> " << links[routerTwo][0].to << " at dis " << links[routerTwo][0].distance << " " << links[routerTwo][0].status << endl;
-        // cout << "router " << routerTwo << " -> " << links[routerOne][0].to << " at dis " << links[routerOne][0].distance << " " << links[routerOne][0].status << endl;
+        // cout << "\nrouter " << routerOne << " -> " << links[routerTwo][0].connectedRouter << " at dis " << links[routerTwo][0].distance << " " << links[routerTwo][0].status << endl;
+        // cout << "\nrouter " << routerTwo << " -> " << links[routerOne][0].connectedRouter << " at dis " << links[routerOne][0].distance << " " << links[routerOne][0].status << endl;
     }
 
     void fail_router(int id);

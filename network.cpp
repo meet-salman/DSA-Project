@@ -32,7 +32,8 @@ Network create_network()
     cout << "Enter network ID: ";
     cin >> networkID;
     cout << "Enter network name: ";
-    cin >> networkName;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    getline(cin, networkName);
 
     Network n(networkID, networkName);
 

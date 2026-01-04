@@ -6,7 +6,10 @@ public:
     int id;
     bool status; // failed or alive
 
-    Router(int id) : id(id), status(true) {}
+    Router(int id) : id(id), status(true)
+    {
+        cout << "Router " << id << " added in network successfully!\n";
+    }
 
     int get_id()
     {

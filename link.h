@@ -9,6 +9,6 @@ public:
 
     Link(int connectedRouter, int distance) : connectedRouter(connectedRouter), distance(distance), status(true)
     {
-        cout << "\nRouter " << connectedRouter << " connected successfully!";
+        cout << "Router " << connectedRouter << " connected successfully!\n";
     }
 };
