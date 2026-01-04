@@ -10,5 +10,7 @@ int main()
     add_link_in_network(n);
     add_link_in_network(n);
 
+    n.display_links();
+
     return 0;
 }

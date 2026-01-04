@@ -68,8 +68,12 @@ public:
             add_router(id);
     }
 
-    void displayLinks()
+    void display_links()
     {
+        cout << BG_WHITE << BLUE << BOLD
+             << "\n              LINKS IN NETWORK                       " << RESET << "\n";
+        cout << "-----------------------------------------------------\n";
+
         for (int i = 0; i < links.size(); i++)
         {
             cout << "Router " << i << " connections:\n";
@@ -88,9 +92,10 @@ public:
             }
             cout << endl;
         }
+        cout << "-----------------------------------------------------\n";
     }
 
-    void add_link(int srcRouter, int destRouter, int distance)
+    bool create_link(int srcRouter, int destRouter, int distance)
     {
         links.resize(routersInNetwork.size());
 
@@ -99,7 +104,7 @@ public:
         {
             cout << "Invalid router ID\n";
             routersInNetwork.erase(srcRouter);
-            return;
+            return false;
         }
 
         // Validate router 2
@@ -107,27 +112,38 @@ public:
         {
             cout << "Invalid router ID\n";
             routersInNetwork.erase(destRouter);
-            return;
+            return false;
         }
 
         // Validate distance
         if (distance <= 0)
         {
             cout << "Invalid distance\n";
-            return;
+            return false;
         }
 
         links[srcRouter].push_back(Link(destRouter, distance));
-        displayLinks();
+        return true;
         // cout << "\nrouter " << srcRouter << " -> " << links[destRouter][0].connectedRouter << " at dis " << links[destRouter][0].distance << " " << links[destRouter][0].status << endl;
     }
 
-    void add_unidirectional_link(int srcRouter, int destRouter, int distance)
+    void unidirectional_link(int srcRouter, int destRouter, int distance)
     {
-        add_link(srcRouter, destRouter, distance);
+        if (create_link(srcRouter, destRouter, distance))
+        {
+            cout << "Unidirectional link added from Router " << srcRouter
+                 << " -> Router " << destRouter << endl;
+        }
     }
 
-    void add_bidirectional_link() {}
+    void bidirectional_link(int srcRouter, int destRouter, int distance)
+    {
+        if (create_link(srcRouter, destRouter, distance) && create_link(destRouter, srcRouter, distance))
+        {
+            cout << "Bidirectional link added between Router " << srcRouter
+                 << " <-> Router " << destRouter << endl;
+        }
+    }
 
     void fail_router(int id);
     void fail_link(int u, int v);

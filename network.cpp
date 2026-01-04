@@ -11,17 +11,36 @@ void add_router_in_network(Network &n)
 
 void add_link_in_network(Network &n)
 {
-    int srcRouter, destRouter, distance;
-    cout << "\nConnect router (id): ";
+    int srcRouter, destRouter, distance, option;
+
+    cout << "\nEnter source router ID: ";
     cin >> srcRouter;
 
-    cout << "to router (id): ";
+    cout << "Enter destination router ID: ";
     cin >> destRouter;
 
-    cout << "at distance: ";
+    cout << "Enter distance between routers: ";
     cin >> distance;
 
-    n.add_unidirectional_link(srcRouter, destRouter, distance);
+    cout << "\nSelect link type:\n";
+    cout << "1. Unidirectional Link\n";
+    cout << "2. Bidirectional Link\n";
+    cout << "Enter your choice: ";
+    cin >> option;
+
+    switch (option)
+    {
+    case 1:
+        n.unidirectional_link(srcRouter, destRouter, distance);
+        break;
+
+    case 2:
+        n.bidirectional_link(srcRouter, destRouter, distance);
+        break;
+
+    default:
+        cout << "Invalid choice! No link added.\n";
+    }
 }
 
 Network create_network()
