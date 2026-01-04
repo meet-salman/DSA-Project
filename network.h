@@ -22,6 +22,13 @@ public:
         cout << BG_BLUE << WHITE << BOLD
              << "------------------------------------------" << RESET << "\n";
 
+        int noOfRouters;
+        cout << "Enter no of routers to initialized: ";
+        cin >> noOfRouters;
+
+        for (int i = 0; i < noOfRouters; i++)
+            add_router(i);
+
         display_network_details();
     }
 
@@ -47,10 +54,7 @@ public:
     void add_router(int routerId)
     {
         if (is_valid_router(routerId))
-        {
             routers.push_back(Router(routerId));
-            links.resize(routersInNetwork.size());
-        }
         else
         {
             cout << "Router already exist\n";
@@ -60,6 +64,8 @@ public:
 
     void add_link(int routerOne, int routerTwo, int distance)
     {
+        links.resize(routersInNetwork.size());
+
         // Validate router 1
         if (is_valid_router(routerOne) && routerOne >= 0)
         {
