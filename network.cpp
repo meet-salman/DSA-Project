@@ -11,17 +11,17 @@ void add_router_in_network(Network &n)
 
 void add_link_in_network(Network &n)
 {
-    int routerOne, routerTwo, distance;
+    int srcRouter, destRouter, distance;
     cout << "\nConnect router (id): ";
-    cin >> routerOne;
+    cin >> srcRouter;
 
     cout << "to router (id): ";
-    cin >> routerTwo;
+    cin >> destRouter;
 
     cout << "at distance: ";
     cin >> distance;
 
-    n.add_link(routerOne, routerTwo, distance);
+    n.add_unidirectional_link(srcRouter, destRouter, distance);
 }
 
 Network create_network()
