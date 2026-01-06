@@ -186,6 +186,38 @@ public:
 
         activeLinksInNetwork--;
     }
+
+    void restore_link(int srcRouter, int destRouter)
+    {
+        bool biDirectional = false;
+
+        for (auto &link : links[srcRouter])
+        {
+            if (link.connectedRouter == destRouter)
+            {
+                link.status = 1;
+                biDirectional = link.isBiDirectional;
+            }
+        }
+
+        if (biDirectional)
+        {
+            for (auto &link : links[destRouter])
+            {
+                if (link.connectedRouter == srcRouter)
+                {
+                    link.status = 1;
+
+                    cout << "Router " << srcRouter << " <-> " << destRouter << " Linked restored successfully!\n";
+                }
+            }
+        }
+        else
+            cout << "Router " << srcRouter << " -> " << destRouter << " Linked restored successfully!\n";
+
+        activeLinksInNetwork++;
+    }
+
     void restore_router(int id);
     void simulate_routing(int src);
 };

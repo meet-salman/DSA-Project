@@ -13,7 +13,8 @@ int main()
         cout << "3. Display Network Details\n";
         cout << "4. Display Links\n";
         cout << "5. Fail link\n";
-        cout << "6. Exit\n";
+        cout << "6. Restore link\n";
+        cout << "7. Exit\n";
         cout << "Enter your option: ";
         cin >> option;
 
@@ -61,11 +62,15 @@ int main()
             n.display_links();
             break;
 
-        case 5: // Display links
+        case 5: // Fail link
             fail_link_in_network(n);
             break;
 
-        case 6: // Exit
+        case 6: // Restore link
+            restore_link_in_network(n);
+            break;
+
+        case 7: // Exit
             cout << "Exiting program. Goodbye!\n";
             return 0;
 
