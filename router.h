@@ -23,7 +23,16 @@ public:
 
     void display_router_info()
     {
-        cout << "Router ID: " << id << endl;
-        cout << "Status   : " << (status ? "ACTIVE" : "FAILED") << endl;
+        // cout << "Router ID: " << id << endl;
+        // cout << "Status   : " << (status ? "ACTIVE" : "FAILED") << endl;
+
+        cout << "Router ID: " << id << " | Status: ";
+
+        if (status)
+            cout << "ALIVE";
+        else
+            cout << "FAILED";
+
+        cout << '\n';
     }
 };

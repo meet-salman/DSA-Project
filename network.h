@@ -71,6 +71,22 @@ public:
             add_router(id);
     }
 
+    void display_all_router_details()
+    {
+        cout << "\n========== ROUTER DETAILS ==========\n";
+
+        if (routers.empty())
+        {
+            cout << "No routers in the network.\n";
+            return;
+        }
+
+        for (auto &router : routers)
+            router.display_router_info();
+
+        cout << "===================================\n";
+    }
+
     void display_links()
     {
         cout << BG_WHITE << BLUE << BOLD
