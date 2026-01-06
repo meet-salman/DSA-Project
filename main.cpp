@@ -15,7 +15,8 @@ int main()
         cout << "5. Fail link\n";
         cout << "6. Restore link\n";
         cout << "7. Fail Router\n";
-        cout << "8. Exit\n";
+        cout << "8. Restore Router\n";
+        cout << "9. Exit\n";
         cout << "Enter your option: ";
         cin >> option;
 
@@ -72,12 +73,14 @@ int main()
             break;
 
         case 7: // Restore link
-            int u;
-            cin >> u;
-            n.fail_router(u);
+            fail_router_in_network(n);
             break;
 
-        case 8: // Exit
+        case 8: // Restore link
+            restore_router_in_network(n);
+            break;
+
+        case 9: // Exit
             cout << "Exiting program. Goodbye!\n";
             return 0;
 

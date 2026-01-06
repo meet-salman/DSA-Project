@@ -236,6 +236,25 @@ public:
         }
     }
 
-    void restore_router(int id);
+    void restore_router(int routerId)
+    {
+        if (routerId >= routers.size())
+        {
+            cout << "Invalid router ID.\n";
+            return;
+        }
+
+        if (routers[routerId].status)
+        {
+            cout << "Router " << routerId << " already alive!\n";
+            return;
+        }
+        else
+        {
+            routers[routerId].status = 1;
+            cout << "Router " << routerId << " restored successfully!\n";
+        }
+    }
+
     void simulate_routing(int src);
 };

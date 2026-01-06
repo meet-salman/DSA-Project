@@ -65,6 +65,22 @@ void restore_link_in_network(Network &n)
     n.restore_link(srcRouter, destRouter);
 }
 
+void fail_router_in_network(Network &n)
+{
+    int routerId;
+    cout << "\nEnter router ID: ";
+    cin >> routerId;
+    n.fail_router(routerId);
+}
+
+void restore_router_in_network(Network &n)
+{
+    int routerId;
+    cout << "\nEnter router ID: ";
+    cin >> routerId;
+    n.restore_router(routerId);
+}
+
 Network create_network()
 {
     int networkID;
