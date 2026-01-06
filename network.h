@@ -5,7 +5,7 @@ class Network
 private:
     int id;
     string name;
-    int linksInNetwork;
+    int linksInNetwork, activeLinksInNetwork;
     set<int> routersInNetwork;
     vector<Router> routers;
     vector<vector<Link>> links;
@@ -16,6 +16,7 @@ public:
         this->id = id;
         this->name = name;
         this->linksInNetwork = 0;
+        this->activeLinksInNetwork = 0;
 
         cout << BG_BLUE << WHITE << BOLD
              << "------------------------------------------" << RESET << "\n";
@@ -43,7 +44,7 @@ public:
         cout << "Network ID: " << id << endl
              << "Network Name: " << name << endl
              << "Routers in Network: " << routers.size() << " Routers" << endl
-             << "Links in Network: " << linksInNetwork << " Links" << endl;
+             << "Actice Links in Network: " << activeLinksInNetwork << " Links" << endl;
 
         cout << "------------------------------------------\n";
     }
@@ -137,6 +138,7 @@ public:
                  << " -> Router " << destRouter << endl;
 
             linksInNetwork++;
+            activeLinksInNetwork++;
         }
     }
 
@@ -148,6 +150,7 @@ public:
                  << " <-> Router " << destRouter << endl;
 
             linksInNetwork++;
+            activeLinksInNetwork++;
         }
     }
 
