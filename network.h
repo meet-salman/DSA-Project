@@ -216,8 +216,18 @@ public:
         {
             if (link.connectedRouter == destRouter)
             {
-                link.status = 1;
-                biDirectional = link.isBiDirectional;
+                if (link.status == 0)
+                {
+                    link.status = 1;
+                    biDirectional = link.isBiDirectional;
+                }
+                else
+                {
+                    cout << "Router " << srcRouter
+                         << (link.isBiDirectional ? " <-> " : " -> ")
+                         << destRouter << " Linked already active!\n";
+                    return;
+                }
             }
         }
 
