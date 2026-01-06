@@ -178,8 +178,16 @@ public:
         {
             if (link.connectedRouter == destRouter)
             {
-                link.status = 0;
-                biDirectional = link.isBiDirectional;
+                if (link.status == 1)
+                {
+                    link.status = 0;
+                    biDirectional = link.isBiDirectional;
+                }
+                else
+                {
+                    cout << "Router " << srcRouter << " -> " << destRouter << " Link already failed!\n";
+                    return;
+                }
             }
         }
 
@@ -190,13 +198,12 @@ public:
                 if (link.connectedRouter == srcRouter)
                 {
                     link.status = 0;
-
-                    cout << "Router " << srcRouter << " <-> " << destRouter << " Linked failed successfully!\n";
+                    cout << "Router " << srcRouter << " <-> " << destRouter << " Linked failed!\n";
                 }
             }
         }
         else
-            cout << "Router " << srcRouter << " -> " << destRouter << " Linked failed successfully!\n";
+            cout << "Router " << srcRouter << " -> " << destRouter << " Linked failed!\n";
 
         activeLinksInNetwork--;
     }
