@@ -155,7 +155,37 @@ public:
     }
 
     void fail_router(int id);
-    void fail_link(int u, int v);
+
+    void fail_link(int srcRouter, int destRouter)
+    {
+        bool biDirectional = false;
+
+        for (auto &link : links[srcRouter])
+        {
+            if (link.connectedRouter == destRouter)
+            {
+                link.status = 0;
+                biDirectional = link.isBiDirectional;
+            }
+        }
+
+        if (biDirectional)
+        {
+            for (auto &link : links[destRouter])
+            {
+                if (link.connectedRouter == srcRouter)
+                {
+                    link.status = 0;
+
+                    cout << "Router " << srcRouter << " <-> " << destRouter << " Linked failed successfully!\n";
+                }
+            }
+        }
+        else
+            cout << "Router " << srcRouter << " -> " << destRouter << " Linked failed successfully!\n";
+
+        activeLinksInNetwork--;
+    }
     void restore_router(int id);
     void simulate_routing(int src);
 };

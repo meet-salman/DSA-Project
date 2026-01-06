@@ -43,6 +43,17 @@ void add_link_in_network(Network &n)
     }
 }
 
+void fail_link_in_network(Network &n)
+{
+    int srcRouter, destRouter;
+    cout << "\nEnter source router: ";
+    cin >> srcRouter;
+    cout << "Enter destination router: ";
+    cin >> destRouter;
+
+    n.fail_link(srcRouter, destRouter);
+}
+
 Network create_network()
 {
     int networkID;
