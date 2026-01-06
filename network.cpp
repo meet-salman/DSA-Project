@@ -31,11 +31,11 @@ void add_link_in_network(Network &n)
     switch (option)
     {
     case 1:
-        n.unidirectional_link(srcRouter, destRouter, distance);
+        n.unidirectional_link(srcRouter, destRouter, distance, false);
         break;
 
     case 2:
-        n.bidirectional_link(srcRouter, destRouter, distance);
+        n.bidirectional_link(srcRouter, destRouter, distance, true);
         break;
 
     default:

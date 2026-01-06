@@ -5,8 +5,9 @@ class Network
 private:
     int id;
     string name;
-    vector<Router> routers;
+    int linksInNetwork;
     set<int> routersInNetwork;
+    vector<Router> routers;
     vector<vector<Link>> links;
 
 public:
@@ -14,6 +15,7 @@ public:
     {
         this->id = id;
         this->name = name;
+        this->linksInNetwork = 0;
 
         cout << BG_BLUE << WHITE << BOLD
              << "------------------------------------------" << RESET << "\n";
@@ -41,7 +43,7 @@ public:
         cout << "Network ID: " << id << endl
              << "Network Name: " << name << endl
              << "Routers in Network: " << routers.size() << " Routers" << endl
-             << "Links in Network: " << links.size() << " Links" << endl;
+             << "Links in Network: " << linksInNetwork << " Links" << endl;
 
         cout << "------------------------------------------\n";
     }
@@ -95,7 +97,7 @@ public:
         cout << "-----------------------------------------------------\n";
     }
 
-    bool create_link(int srcRouter, int destRouter, int distance)
+    bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
         links.resize(routersInNetwork.size());
 
@@ -122,26 +124,30 @@ public:
             return false;
         }
 
-        links[srcRouter].push_back(Link(destRouter, distance));
+        links[srcRouter].push_back(Link(destRouter, distance, isBiDirectional));
         return true;
         // cout << "\nrouter " << srcRouter << " -> " << links[destRouter][0].connectedRouter << " at dis " << links[destRouter][0].distance << " " << links[destRouter][0].status << endl;
     }
 
-    void unidirectional_link(int srcRouter, int destRouter, int distance)
+    void unidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
-        if (create_link(srcRouter, destRouter, distance))
+        if (create_link(srcRouter, destRouter, distance, isBiDirectional))
         {
             cout << "Unidirectional link added from Router " << srcRouter
                  << " -> Router " << destRouter << endl;
+
+            linksInNetwork++;
         }
     }
 
-    void bidirectional_link(int srcRouter, int destRouter, int distance)
+    void bidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
-        if (create_link(srcRouter, destRouter, distance) && create_link(destRouter, srcRouter, distance))
+        if (create_link(srcRouter, destRouter, distance, isBiDirectional) && create_link(destRouter, srcRouter, distance, isBiDirectional))
         {
             cout << "Bidirectional link added between Router " << srcRouter
                  << " <-> Router " << destRouter << endl;
+
+            linksInNetwork++;
         }
     }
 
