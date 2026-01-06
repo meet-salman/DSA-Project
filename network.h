@@ -154,8 +154,6 @@ public:
         }
     }
 
-    void fail_router(int id);
-
     void fail_link(int srcRouter, int destRouter)
     {
         bool biDirectional = false;
@@ -216,6 +214,26 @@ public:
             cout << "Router " << srcRouter << " -> " << destRouter << " Linked restored successfully!\n";
 
         activeLinksInNetwork++;
+    }
+
+    void fail_router(int routerId)
+    {
+        if (routerId >= routers.size())
+        {
+            cout << "Invalid router ID.\n";
+            return;
+        }
+
+        if (!routers[routerId].status)
+        {
+            cout << "Router " << routerId << " already failed!\n";
+            return;
+        }
+        else
+        {
+            routers[routerId].status = 0;
+            cout << "Router " << routerId << " failed!\n";
+        }
     }
 
     void restore_router(int id);
