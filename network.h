@@ -281,7 +281,7 @@ public:
 
         if (routers[routerId].status)
         {
-            cout << "Router " << routerId << " already alive!\n";
+            cout << "Router " << routerId << " already actice!\n";
             return;
         }
         else
