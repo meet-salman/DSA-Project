@@ -185,7 +185,9 @@ public:
                 }
                 else
                 {
-                    cout << "Router " << srcRouter << " -> " << destRouter << " Link already failed!\n";
+                    cout << "Router " << srcRouter
+                         << (link.isBiDirectional ? " <-> " : " -> ")
+                         << destRouter << " Link already failed!\n";
                     return;
                 }
             }
