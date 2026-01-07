@@ -49,71 +49,7 @@ public:
         cout << "------------------------------------------\n";
     }
 
-    bool is_valid_router(int routerId)
-    {
-        return routersInNetwork.insert(routerId).second;
-    }
-
-    void add_router(int routerId)
-    {
-        if (is_valid_router(routerId))
-            routers.push_back(Router(routerId));
-        else
-        {
-            cout << "Router already exist\n";
-            return;
-        }
-    }
-
-    void add_routers_in_bulk(int startID, int endID)
-    {
-        for (int id = startID; id <= endID; id++)
-            add_router(id);
-    }
-
-    void display_all_router_details()
-    {
-        cout << "\n========== ROUTER DETAILS ==========\n";
-
-        if (routers.empty())
-        {
-            cout << "No routers in the network.\n";
-            return;
-        }
-
-        for (auto &router : routers)
-            router.display_router_info();
-
-        cout << "===================================\n";
-    }
-
-    void display_links()
-    {
-        cout << BG_WHITE << BLUE << BOLD
-             << "\n              LINKS IN NETWORK                       " << RESET << "\n";
-        cout << "-----------------------------------------------------\n";
-
-        for (int i = 0; i < links.size(); i++)
-        {
-            cout << "Router " << i << " connections:\n";
-
-            if (links[i].empty())
-            {
-                cout << "  No links.\n";
-                continue;
-            }
-
-            for (const auto &link : links[i])
-            {
-                cout << "  -> Connected Router: " << link.connectedRouter
-                     << ", Distance: " << link.distance
-                     << ", Status: " << (link.status ? "ACTIVE" : "FAILED") << endl;
-            }
-            cout << endl;
-        }
-        cout << "-----------------------------------------------------\n";
-    }
-
+    // ---- Links Functions
     bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
         links.resize(routersInNetwork.size());
@@ -251,6 +187,56 @@ public:
         activeLinksInNetwork++;
     }
 
+    void display_all_links_details()
+    {
+        cout << BG_WHITE << BLUE << BOLD
+             << "\n              LINKS IN NETWORK                       " << RESET << "\n";
+        cout << "-----------------------------------------------------\n";
+
+        for (int i = 0; i < links.size(); i++)
+        {
+            cout << "Router " << i << " connections:\n";
+
+            if (links[i].empty())
+            {
+                cout << "  No links.\n";
+                continue;
+            }
+
+            for (const auto &link : links[i])
+            {
+                cout << "  -> Connected Router: " << link.connectedRouter
+                     << ", Distance: " << link.distance
+                     << ", Status: " << (link.status ? "ACTIVE" : "FAILED") << endl;
+            }
+            cout << endl;
+        }
+        cout << "-----------------------------------------------------\n";
+    }
+
+    // ---- Router Functions
+    void add_router(int routerId)
+    {
+        if (is_valid_router(routerId))
+            routers.push_back(Router(routerId));
+        else
+        {
+            cout << "Router already exist\n";
+            return;
+        }
+    }
+
+    void add_routers_in_bulk(int startID, int endID)
+    {
+        for (int id = startID; id <= endID; id++)
+            add_router(id);
+    }
+
+    bool is_valid_router(int routerId)
+    {
+        return routersInNetwork.insert(routerId).second;
+    }
+
     void fail_router(int routerId)
     {
         if (routerId >= routers.size())
@@ -289,6 +275,22 @@ public:
             routers[routerId].status = 1;
             cout << "Router " << routerId << " restored successfully!\n";
         }
+    }
+
+    void display_all_router_details()
+    {
+        cout << "\n========== ROUTER DETAILS ==========\n";
+
+        if (routers.empty())
+        {
+            cout << "No routers in the network.\n";
+            return;
+        }
+
+        for (auto &router : routers)
+            router.display_router_info();
+
+        cout << "===================================\n";
     }
 
     void simulate_routing(int src);
