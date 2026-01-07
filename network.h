@@ -385,6 +385,21 @@ public:
         }
     }
 
+    void display_router_shortest_path(int srcRouter, int destRouter)
+    {
+        cout << "\n======== SHORTEST PATH ========\n";
+        cout << "Router " << srcRouter << " -> " << destRouter << endl;
+
+        if (allPaths[srcRouter][destRouter].empty())
+        {
+            cout << "Unreachable!\n";
+            return;
+        }
+
+        for (auto &next : allPaths[srcRouter][destRouter])
+            cout << next << " ";
+    }
+
     void display_all_shortest_distances()
     {
         cout << "\n======== SHORTEST DISTANCES ========\n";

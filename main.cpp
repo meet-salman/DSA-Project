@@ -16,9 +16,10 @@ int main()
         cout << "6. Restore link\n";
         cout << "7. Fail Router\n";
         cout << "8. Restore Router\n";
-        cout << "9. Display router details\n";
-        cout << "10. Shortest Path\n";
-        cout << "11. Exit\n";
+        cout << "9. Display routers details\n";
+        cout << "10. Display shortest distances\n";
+        cout << "11. Display shortest path\n";
+        cout << "12. Exit\n";
         cout << "Enter your option: ";
         cin >> option;
 
@@ -73,15 +74,19 @@ int main()
             restore_router_in_network(n);
             break;
 
-        case 9: // display router details
+        case 9: // display routers details
             n.display_all_router_details();
             break;
 
-        case 10: // display router details
-            n.display_all_shortest_paths();
+        case 10: // display shortest distances
+            n.display_all_shortest_distances();
             break;
 
-        case 11: // Exit
+        case 11: // display shortest path
+            display_shortest_path(n);
+            break;
+
+        case 12: // Exit
             cout << "Exiting program. Goodbye!\n";
             return 0;
 

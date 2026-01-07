@@ -88,6 +88,17 @@ void restore_router_in_network(Network &n)
     n.restore_router(routerId);
 }
 
+void display_shortest_path(Network &n)
+{
+    int srcRouter, destRouter;
+    cout << "\nEnter source router: ";
+    cin >> srcRouter;
+    cout << "Enter destination router: ";
+    cin >> destRouter;
+
+    n.display_router_shortest_path(srcRouter, destRouter);
+}
+
 Network create_network()
 {
     int networkID;
