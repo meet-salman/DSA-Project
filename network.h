@@ -385,7 +385,7 @@ public:
         }
     }
 
-    void display_all_shortest_paths()
+    void display_all_shortest_distances()
     {
         cout << "\n======== SHORTEST DISTANCES ========\n";
         for (int src = 0; src < shortestDistances.size(); src++)
