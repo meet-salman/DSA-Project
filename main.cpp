@@ -78,7 +78,7 @@ int main()
             break;
 
         case 10: // display router details
-            n.calculate_shortest_paths();
+            n.display_all_shortest_paths();
             break;
 
         case 11: // Exit

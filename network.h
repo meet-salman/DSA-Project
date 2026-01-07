@@ -261,6 +261,7 @@ public:
         else
         {
             routers[routerId].status = 0;
+            calculate_shortest_paths();
             cout << "Router " << routerId << " failed!\n";
         }
     }
@@ -305,12 +306,16 @@ public:
     void calculate_shortest_paths()
     {
         shortestDistances.clear();
-        // allPaths.clear();
+        allPaths.clear();
 
         for (int src = 0; src < routersInNetwork.size(); src++)
         {
-            if (!routers[src].status) // failed router
+            // failed router
+            if (routers[src].status == 0)
+            {
+                shortestDistances.push_back({});
                 continue;
+            }
 
             vector<bool> explored(routersInNetwork.size(), false);
             vector<int> distance(routersInNetwork.size(), INT_MAX);
@@ -341,7 +346,7 @@ public:
                     int neighbourDistance = link.distance;
                     int distanceToNeighbour = distanceToCurrentNode + neighbourDistance;
 
-                    if (!explored[neighbour] && distanceToNeighbour < distance[neighbour])
+                    if (!explored[neighbour] && routers[neighbour].status != 0 && distanceToNeighbour < distance[neighbour])
                     {
                         distance[neighbour] = distanceToNeighbour;
                         parent[neighbour] = currentNode;
@@ -375,6 +380,25 @@ public:
             // Add src paths to all nodes
             allPaths.push_back(distsFromSrc);
         }
+    }
+
+    void display_all_shortest_paths()
+    {
+        cout << "\n======== SHORTEST DISTANCES ========\n";
+        for (int src = 0; src < shortestDistances.size(); src++)
+        {
+            if (routers[src].status == 0)
+                continue;
+
+            cout << "Router " << src << ": ";
+            for (auto &distance : shortestDistances[src])
+            {
+                cout << ((distance == INT_MAX) ? string("-") : to_string(distance)) << " ";
+            }
+
+            cout << endl;
+        }
+        cout << "======================================\n";
     }
 
     void simulate_routing(int src);
