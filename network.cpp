@@ -1,12 +1,13 @@
 #include "network.h"
 
-void add_router_in_network(Network &n)
+void add_routers_in_network(Network &n)
 {
-    int routerId;
-    cout << "\nEnter Router ID: ";
-    cin >> routerId;
+    int noOfRouters;
+    cout << "How many routers do you want to add? ";
+    cin >> noOfRouters;
 
-    n.add_router(routerId);
+    for (int i = 0; i < noOfRouters; i++)
+        n.add_router(n.get_no_of_routers());
 }
 
 void add_links_in_network(Network &n)

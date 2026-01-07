@@ -34,17 +34,8 @@ int main()
         switch (option)
         {
         case 1: // Add routers
-        {
-            int numRouters;
-            cout << "How many routers do you want to add? ";
-            cin >> numRouters;
-
-            for (int i = 0; i < numRouters; i++)
-            {
-                add_router_in_network(n);
-            }
+            add_routers_in_network(n);
             break;
-        }
 
         case 2: // Add links
             add_links_in_network(n);

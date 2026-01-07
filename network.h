@@ -51,6 +51,11 @@ public:
         cout << "------------------------------------------\n";
     }
 
+    int get_no_of_routers()
+    {
+        return routersInNetwork.size();
+    }
+
     // ---- Links Functions
     bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
