@@ -17,7 +17,7 @@ int main()
         cout << "7. Fail Router\n";
         cout << "8. Restore Router\n";
         cout << "9. Display router details\n";
-        cout << "10. SHortest Path\n";
+        cout << "10. Shortest Path\n";
         cout << "11. Exit\n";
         cout << "Enter your option: ";
         cin >> option;

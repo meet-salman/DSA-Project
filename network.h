@@ -9,6 +9,8 @@ private:
     set<int> routersInNetwork;
     vector<Router> routers;
     vector<vector<Link>> links;
+    vector<vector<int>> shortestDistances;
+    vector<vector<vector<int>>> allPaths;
 
 public:
     Network(int id, string name)
@@ -296,25 +298,76 @@ public:
     // ---- Shortest path functions
     void calculate_shortest_paths()
     {
-        for (int i = 0; i < links.size(); i++)
-        {
-            priority_queue<pair<int, int>,
-                           vector<pair<int, int>>,
-                           greater<pair<int, int>>>
-                minPQ;
+        shortestDistances.clear();
+        // allPaths.clear();
 
-            for (auto &link : links[i])
-            {
-                minPQ.push({link.connectedRouter, link.distance});
-            }
-            cout << "Router " << i << endl;
+        for (int src = 0; src < routersInNetwork.size(); src++)
+        {
+            if (!routers[src].status) // failed router
+                continue;
+
+            vector<bool> explored(routersInNetwork.size(), false);
+            vector<int> distance(routersInNetwork.size(), INT_MAX);
+            vector<int> parent(routersInNetwork.size(), -1);
+
+            priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minPQ;
+
+            distance[src] = 0;
+            minPQ.push({0, src});
+
             while (!minPQ.empty())
             {
-                pair<int, int> p = minPQ.top();
+                int currentNode = minPQ.top().second;
+                int distanceToCurrentNode = minPQ.top().first;
                 minPQ.pop();
-                cout << "    " << p.first << " " << p.second << endl;
+
+                if (explored[currentNode])
+                    continue;
+
+                explored[currentNode] = true;
+
+                for (auto &link : links[currentNode])
+                {
+                    if (!link.status)
+                        continue;
+
+                    int neighbour = link.connectedRouter;
+                    int neighbourDistance = link.distance;
+                    int distanceToNeighbour = distanceToCurrentNode + neighbourDistance;
+
+                    if (!explored[neighbour] && distanceToNeighbour < distance[neighbour])
+                    {
+                        distance[neighbour] = distanceToNeighbour;
+                        parent[neighbour] = currentNode;
+                        minPQ.push({distanceToNeighbour, neighbour});
+                    }
+                }
             }
-            cout << "-----\n";
+            // Add src Shortest Distances
+            shortestDistances.push_back(distance);
+
+            vector<vector<int>> distsFromSrc(routersInNetwork.size());
+
+            for (int dest = 0; dest < routersInNetwork.size(); dest++)
+            {
+                if (distance[dest] == INT_MAX)
+                    continue; // no path exists
+
+                vector<int> path;
+                int current = dest;
+
+                // stop when reached at source
+                while (current != -1)
+                {
+                    path.push_back(current);
+                    current = parent[current];
+                }
+
+                reverse(path.begin(), path.end());
+                distsFromSrc[dest] = path;
+            }
+            // Add src paths to all nodes
+            allPaths.push_back(distsFromSrc);
         }
     }
 
