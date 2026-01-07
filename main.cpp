@@ -8,22 +8,33 @@ int main()
     while (true)
     {
         cout << "\n===== NETWORK MENU =====\n";
+
+        // Network Creation
         cout << "1. Add Routers\n";
         cout << "2. Add Links\n";
+
+        // Display / View
         cout << "3. Display Network Details\n";
-        cout << "4. Display Links\n";
-        cout << "5. Fail link\n";
-        cout << "6. Restore link\n";
-        cout << "7. Fail Router\n";
-        cout << "8. Restore Router\n";
-        cout << "9. Display routers details\n";
-        cout << "10. Display shortest distances\n";
-        cout << "11. Display shortest path\n";
+        cout << "4. Display All Router Details\n";
+        cout << "5. Display All Link Details\n";
+
+        // Failure & Recovery
+        cout << "6. Fail Link\n";
+        cout << "7. Restore Link\n";
+        cout << "8. Fail Router\n";
+        cout << "9. Restore Router\n";
+
+        // Analysis
+        cout << "10. Display Shortest Distances\n";
+        cout << "11. Display Shortest Path\n";
+
+        // Exit
         cout << "12. Exit\n";
+
         cout << "Enter your option: ";
         cin >> option;
 
-        if (cin.fail()) // handle non-integer input
+        if (cin.fail())
         {
             cin.clear();
             cin.ignore(1000, '\n');
@@ -33,56 +44,56 @@ int main()
 
         switch (option)
         {
-        case 1: // Add routers
+        case 1:
             add_routers_in_network(n);
             break;
 
-        case 2: // Add links
+        case 2:
             add_links_in_network(n);
             break;
 
-        case 3: // Display network details
+        case 3:
             n.display_network_details();
             break;
 
-        case 4: // Display links
-            n.display_all_links_details();
-            break;
-
-        case 5: // Fail link
-            fail_link_in_network(n);
-            break;
-
-        case 6: // Restore link
-            restore_link_in_network(n);
-            break;
-
-        case 7: // Fail Router
-            fail_router_in_network(n);
-            break;
-
-        case 8: // Restore router
-            restore_router_in_network(n);
-            break;
-
-        case 9: // display routers details
+        case 4:
             n.display_all_router_details();
             break;
 
-        case 10: // display shortest distances
+        case 5:
+            n.display_all_links_details();
+            break;
+
+        case 6:
+            fail_link_in_network(n);
+            break;
+
+        case 7:
+            restore_link_in_network(n);
+            break;
+
+        case 8:
+            fail_router_in_network(n);
+            break;
+
+        case 9:
+            restore_router_in_network(n);
+            break;
+
+        case 10:
             n.display_all_shortest_distances();
             break;
 
-        case 11: // display shortest path
+        case 11:
             display_shortest_path(n);
             break;
 
-        case 12: // Exit
+        case 12:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 
         default:
-            cout << "Invalid option! Please select 1-5.\n";
+            cout << "Invalid option! Please select between 1 and 12.\n";
         }
     }
 
