@@ -53,24 +53,28 @@ void add_links_in_network(Network &n)
 
 void fail_link_in_network(Network &n)
 {
-    int srcRouter, destRouter;
+    int srcRouter, destRouter, distance;
     cout << "\nEnter source router: ";
     cin >> srcRouter;
     cout << "Enter destination router: ";
     cin >> destRouter;
+    cout << "Enter distance: ";
+    cin >> distance;
 
-    n.fail_link(srcRouter, destRouter);
+    n.fail_link(srcRouter, destRouter, distance);
 }
 
 void restore_link_in_network(Network &n)
 {
-    int srcRouter, destRouter;
+    int srcRouter, destRouter, distance;
     cout << "\nEnter source router: ";
     cin >> srcRouter;
     cout << "Enter destination router: ";
     cin >> destRouter;
+    cout << "Enter distance: ";
+    cin >> distance;
 
-    n.restore_link(srcRouter, destRouter);
+    n.restore_link(srcRouter, destRouter, distance);
 }
 
 void fail_router_in_network(Network &n)

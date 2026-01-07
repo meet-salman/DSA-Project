@@ -99,7 +99,7 @@ public:
             linksInNetwork++;
             activeLinksInNetwork++;
 
-            if (isLast)
+            if (isLast && activeLinksInNetwork >= 2)
                 calculate_shortest_paths();
         }
     }
@@ -114,23 +114,25 @@ public:
             linksInNetwork++;
             activeLinksInNetwork++;
 
-            if (isLast)
+            if (isLast && activeLinksInNetwork >= 2)
                 calculate_shortest_paths();
         }
     }
 
-    void fail_link(int srcRouter, int destRouter)
+    void fail_link(int srcRouter, int destRouter, int distance)
     {
         bool biDirectional = false;
+        bool failed = false;
 
         for (auto &link : links[srcRouter])
         {
-            if (link.connectedRouter == destRouter)
+            if (link.connectedRouter == destRouter && link.distance == distance)
             {
                 if (link.status == 1)
                 {
                     link.status = 0;
                     biDirectional = link.isBiDirectional;
+                    failed = true;
                 }
                 else
                 {
@@ -146,7 +148,7 @@ public:
         {
             for (auto &link : links[destRouter])
             {
-                if (link.connectedRouter == srcRouter)
+                if (link.connectedRouter == srcRouter && link.distance == distance)
                 {
                     link.status = 0;
                     cout << "Router " << srcRouter << " <-> " << destRouter << " Linked failed!\n";
@@ -156,22 +158,27 @@ public:
         else
             cout << "Router " << srcRouter << " -> " << destRouter << " Linked failed!\n";
 
-        activeLinksInNetwork--;
-        calculate_shortest_paths();
+        if (failed)
+        {
+            activeLinksInNetwork--;
+            calculate_shortest_paths();
+        }
     }
 
-    void restore_link(int srcRouter, int destRouter)
+    void restore_link(int srcRouter, int destRouter, int distance)
     {
         bool biDirectional = false;
+        bool restored = false;
 
         for (auto &link : links[srcRouter])
         {
-            if (link.connectedRouter == destRouter)
+            if (link.connectedRouter == destRouter && link.distance == distance)
             {
                 if (link.status == 0)
                 {
                     link.status = 1;
                     biDirectional = link.isBiDirectional;
+                    restored = true;
                 }
                 else
                 {
@@ -187,10 +194,9 @@ public:
         {
             for (auto &link : links[destRouter])
             {
-                if (link.connectedRouter == srcRouter)
+                if (link.connectedRouter == srcRouter && link.distance == distance)
                 {
                     link.status = 1;
-
                     cout << "Router " << srcRouter << " <-> " << destRouter << " Linked restored successfully!\n";
                 }
             }
@@ -198,8 +204,11 @@ public:
         else
             cout << "Router " << srcRouter << " -> " << destRouter << " Linked restored successfully!\n";
 
-        activeLinksInNetwork++;
-        calculate_shortest_paths();
+        if (restored)
+        {
+            activeLinksInNetwork++;
+            calculate_shortest_paths();
+        }
     }
 
     void display_all_links_details()
