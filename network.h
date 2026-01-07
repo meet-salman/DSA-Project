@@ -293,5 +293,30 @@ public:
         cout << "===================================\n";
     }
 
+    // ---- Shortest path functions
+    void calculate_shortest_paths()
+    {
+        for (int i = 0; i < links.size(); i++)
+        {
+            priority_queue<pair<int, int>,
+                           vector<pair<int, int>>,
+                           greater<pair<int, int>>>
+                minPQ;
+
+            for (auto &link : links[i])
+            {
+                minPQ.push({link.connectedRouter, link.distance});
+            }
+            cout << "Router " << i << endl;
+            while (!minPQ.empty())
+            {
+                pair<int, int> p = minPQ.top();
+                minPQ.pop();
+                cout << "    " << p.first << " " << p.second << endl;
+            }
+            cout << "-----\n";
+        }
+    }
+
     void simulate_routing(int src);
 };
