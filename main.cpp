@@ -46,17 +46,8 @@ int main()
         }
 
         case 2: // Add links
-        {
-            int numLinks;
-            cout << "How many links do you want to add? ";
-            cin >> numLinks;
-
-            for (int i = 0; i < numLinks; i++)
-            {
-                add_link_in_network(n);
-            }
+            add_links_in_network(n);
             break;
-        }
 
         case 3: // Display network details
             n.display_network_details();

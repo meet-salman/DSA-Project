@@ -9,37 +9,44 @@ void add_router_in_network(Network &n)
     n.add_router(routerId);
 }
 
-void add_link_in_network(Network &n)
+void add_links_in_network(Network &n)
 {
-    int srcRouter, destRouter, distance, option;
+    int noOfLinks;
+    cout << "How many links do you want to add? ";
+    cin >> noOfLinks;
 
-    cout << "\nEnter source router ID: ";
-    cin >> srcRouter;
-
-    cout << "Enter destination router ID: ";
-    cin >> destRouter;
-
-    cout << "Enter distance between routers: ";
-    cin >> distance;
-
-    cout << "\nSelect link type:\n";
-    cout << "1. Unidirectional Link\n";
-    cout << "2. Bidirectional Link\n";
-    cout << "Enter your choice: ";
-    cin >> option;
-
-    switch (option)
+    for (int i = 1; i <= noOfLinks; i++)
     {
-    case 1:
-        n.unidirectional_link(srcRouter, destRouter, distance, false);
-        break;
+        int srcRouter, destRouter, distance, option;
 
-    case 2:
-        n.bidirectional_link(srcRouter, destRouter, distance, true);
-        break;
+        cout << "\nEnter source router ID: ";
+        cin >> srcRouter;
 
-    default:
-        cout << "Invalid choice! No link added.\n";
+        cout << "Enter destination router ID: ";
+        cin >> destRouter;
+
+        cout << "Enter distance between routers: ";
+        cin >> distance;
+
+        cout << "\nSelect link type:\n";
+        cout << "1. Unidirectional Link\n";
+        cout << "2. Bidirectional Link\n";
+        cout << "Enter your choice: ";
+        cin >> option;
+
+        switch (option)
+        {
+        case 1:
+            n.unidirectional_link(srcRouter, destRouter, distance, false, ((noOfLinks - i) == 0));
+            break;
+
+        case 2:
+            n.bidirectional_link(srcRouter, destRouter, distance, true, ((noOfLinks - i) == 0));
+            break;
+
+        default:
+            cout << "Invalid choice! No link added.\n";
+        }
     }
 }
 

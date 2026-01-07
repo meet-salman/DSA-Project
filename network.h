@@ -84,7 +84,7 @@ public:
         // cout << "\nrouter " << srcRouter << " -> " << links[destRouter][0].connectedRouter << " at dis " << links[destRouter][0].distance << " " << links[destRouter][0].status << endl;
     }
 
-    void unidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
+    void unidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional, bool isLast)
     {
         if (create_link(srcRouter, destRouter, distance, isBiDirectional))
         {
@@ -93,10 +93,13 @@ public:
 
             linksInNetwork++;
             activeLinksInNetwork++;
+
+            if (isLast)
+                calculate_shortest_paths();
         }
     }
 
-    void bidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
+    void bidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional, bool isLast)
     {
         if (create_link(srcRouter, destRouter, distance, isBiDirectional) && create_link(destRouter, srcRouter, distance, isBiDirectional))
         {
@@ -105,6 +108,9 @@ public:
 
             linksInNetwork++;
             activeLinksInNetwork++;
+
+            if (isLast)
+                calculate_shortest_paths();
         }
     }
 
