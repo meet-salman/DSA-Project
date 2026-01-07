@@ -59,23 +59,10 @@ public:
     // ---- Links Functions
     bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
+        if (!validate_routers(srcRouter, destRouter))
+            return false;
+
         links.resize(routersInNetwork.size());
-
-        // Validate router 1
-        if (is_valid_router(srcRouter) && srcRouter >= 0)
-        {
-            cout << "Invalid router ID\n";
-            routersInNetwork.erase(srcRouter);
-            return false;
-        }
-
-        // Validate router 2
-        if (is_valid_router(destRouter) && destRouter >= 0)
-        {
-            cout << "Invalid router ID\n";
-            routersInNetwork.erase(destRouter);
-            return false;
-        }
 
         // Validate distance
         if (distance <= 0)
@@ -121,6 +108,9 @@ public:
 
     void fail_link(int srcRouter, int destRouter, int distance)
     {
+        if (!validate_routers(srcRouter, destRouter))
+            return;
+
         bool biDirectional = false;
         bool failed = false;
 
@@ -167,6 +157,9 @@ public:
 
     void restore_link(int srcRouter, int destRouter, int distance)
     {
+        if (!validate_routers(srcRouter, destRouter))
+            return;
+
         bool biDirectional = false;
         bool restored = false;
 
@@ -239,26 +232,30 @@ public:
     }
 
     // ---- Router Functions
+    bool validate_routers(int srcRouter, int destRouter)
+    {
+        if (srcRouter >= routersInNetwork.size() || srcRouter <= 0)
+        {
+            cout << "Invalid source router ID.\n";
+            return false;
+        }
+        if (destRouter >= routersInNetwork.size() || destRouter <= 0)
+        {
+            cout << "Invalid destination router ID.\n";
+            return false;
+        }
+        return true;
+    }
+
     void add_router(int routerId)
     {
-        if (is_valid_router(routerId))
-            routers.push_back(Router(routerId));
-        else
-        {
-            cout << "Router already exist\n";
-            return;
-        }
+        routers.push_back(Router(routerId));
     }
 
     void add_routers_in_bulk(int startID, int endID)
     {
         for (int id = startID; id <= endID; id++)
             add_router(id);
-    }
-
-    bool is_valid_router(int routerId)
-    {
-        return routersInNetwork.insert(routerId).second;
     }
 
     void fail_router(int routerId)
