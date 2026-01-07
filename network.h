@@ -152,6 +152,7 @@ public:
             cout << "Router " << srcRouter << " -> " << destRouter << " Linked failed!\n";
 
         activeLinksInNetwork--;
+        calculate_shortest_paths();
     }
 
     void restore_link(int srcRouter, int destRouter)
@@ -193,6 +194,7 @@ public:
             cout << "Router " << srcRouter << " -> " << destRouter << " Linked restored successfully!\n";
 
         activeLinksInNetwork++;
+        calculate_shortest_paths();
     }
 
     void display_all_links_details()
@@ -282,6 +284,7 @@ public:
         else
         {
             routers[routerId].status = 1;
+            calculate_shortest_paths();
             cout << "Router " << routerId << " restored successfully!\n";
         }
     }
@@ -339,7 +342,7 @@ public:
 
                 for (auto &link : links[currentNode])
                 {
-                    if (!link.status)
+                    if (link.status == 0)
                         continue;
 
                     int neighbour = link.connectedRouter;
