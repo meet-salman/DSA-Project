@@ -6,12 +6,10 @@ private:
     int id;
     string name;
     int linksInNetwork, activeLinksInNetwork;
-    set<int> routersInNetwork;
     vector<Router> routers;
     vector<vector<Link>> links;
     vector<vector<int>> shortestDistances;
     vector<vector<vector<int>>> allPaths;
-    unordered_map<int, Router> mp;
 
 public:
     Network(int id, string name)
@@ -54,16 +52,16 @@ public:
 
     int get_no_of_routers()
     {
-        return routersInNetwork.size();
+        return routers.size();
     }
 
     // ---- Links Functions
     bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
     {
+        links.resize(routers.size());
+
         if (!validate_routers(srcRouter, destRouter))
             return false;
-
-        links.resize(routersInNetwork.size());
 
         // Validate distance
         if (distance <= 0)
@@ -235,12 +233,12 @@ public:
     // ---- Router Functions
     bool validate_routers(int srcRouter, int destRouter)
     {
-        if (srcRouter >= routersInNetwork.size() || srcRouter < 0)
+        if (srcRouter < 0 || srcRouter >= routers.size())
         {
             cout << "Invalid source router ID.\n";
             return false;
         }
-        if (destRouter >= routersInNetwork.size() || destRouter < 0)
+        if (destRouter < 0 || destRouter >= routers.size())
         {
             cout << "Invalid destination router ID.\n";
             return false;
@@ -323,7 +321,7 @@ public:
         shortestDistances.clear();
         allPaths.clear();
 
-        for (int src = 0; src < routersInNetwork.size(); src++)
+        for (int src = 0; src < routers.size(); src++)
         {
             // failed router
             if (routers[src].status == 0)
@@ -332,9 +330,9 @@ public:
                 continue;
             }
 
-            vector<bool> explored(routersInNetwork.size(), false);
-            vector<int> distance(routersInNetwork.size(), INT_MAX);
-            vector<int> parent(routersInNetwork.size(), -1);
+            vector<bool> explored(routers.size(), false);
+            vector<int> distance(routers.size(), INT_MAX);
+            vector<int> parent(routers.size(), -1);
 
             priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minPQ;
 
@@ -372,9 +370,9 @@ public:
             // Add src Shortest Distances
             shortestDistances.push_back(distance);
 
-            vector<vector<int>> distsFromSrc(routersInNetwork.size());
+            vector<vector<int>> distsFromSrc(routers.size());
 
-            for (int dest = 0; dest < routersInNetwork.size(); dest++)
+            for (int dest = 0; dest < routers.size(); dest++)
             {
                 if (distance[dest] == INT_MAX)
                     continue; // no path exists
@@ -431,5 +429,49 @@ public:
         cout << "======================================\n";
     }
 
-    void simulate_routing(int src);
+    void simulate_routing(int srcRouter)
+    {
+        if (srcRouter < 0 || srcRouter >= routers.size())
+        {
+            cout << "Invalid source router.\n";
+            return;
+        }
+
+        if (routers[srcRouter].status == 0)
+        {
+            cout << "Source router is FAILED. Cannot simulate routing.\n";
+            return;
+        }
+
+        // Recalculate routing based on current network state
+        calculate_shortest_paths();
+
+        cout << "\n===== ROUTING SIMULATION =====\n";
+        cout << "Source Router: " << srcRouter << "\n\n";
+
+        for (int dest = 0; dest < routers.size(); dest++)
+        {
+            if (dest == srcRouter)
+                continue;
+
+            if (routers[dest].status == 0 ||
+                shortestDistances[srcRouter][dest] == INT_MAX)
+            {
+                cout << "Router " << dest << " : UNREACHABLE\n";
+                continue;
+            }
+
+            // Print path
+            for (int i = 0; i < allPaths[srcRouter][dest].size(); i++)
+            {
+                cout << allPaths[srcRouter][dest][i];
+                if (i + 1 < allPaths[srcRouter][dest].size())
+                    cout << " -> ";
+            }
+
+            cout << "   Distance: " << shortestDistances[srcRouter][dest] << "\n";
+        }
+
+        cout << "==============================\n";
+    }
 };

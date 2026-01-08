@@ -27,9 +27,10 @@ int main()
         // Analysis
         cout << "10. Display Shortest Distances\n";
         cout << "11. Display Shortest Path\n";
+        cout << "12. Simulate Routing from Source\n";
 
         // Exit
-        cout << "12. Exit\n";
+        cout << "13. Exit\n";
 
         cout << "Enter your option: ";
         cin >> option;
@@ -89,6 +90,10 @@ int main()
             break;
 
         case 12:
+            simulate_routing_from_router(n);
+            break;
+
+        case 13:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 

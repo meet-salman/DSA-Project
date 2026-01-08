@@ -104,6 +104,15 @@ void display_shortest_path(Network &n)
     n.display_router_shortest_path(srcRouter, destRouter);
 }
 
+void simulate_routing_from_router(Network &n)
+{
+    int srcRouter;
+    cout << "Enter source router to simulate routing: ";
+    cin >> srcRouter;
+
+    n.simulate_routing(srcRouter);
+}
+
 Network create_network()
 {
     int networkID;
