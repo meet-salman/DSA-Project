@@ -4,16 +4,34 @@
 
 void send_packet(Network &n)
 {
+
+    if (n.generate_pc_id() <= 1)
+    {
+        cout << "Packet can't be send yet!\n";
+        return;
+    }
+
     int srcPC, destPC;
     cout << "Enter Source PC ID: ";
     cin >> srcPC;
     cout << "Enter Destination PC ID: ";
     cin >> destPC;
 
+    if (srcPC >= n.generate_pc_id())
+    {
+        cout << "Invalid Source PC ID\n";
+        return;
+    }
+
+    if (destPC >= n.generate_pc_id())
+    {
+        cout << "Invalid Destination PC ID\n";
+        return;
+    }
+
     PC *src = n.get_pc(srcPC);
     Packet p = *src->generate_packet(srcPC, destPC);
-
-    p.displayPacket();
+    n.transmitt_packet(&p);
 }
 
 PC *createPC(int pcID)

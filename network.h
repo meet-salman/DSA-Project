@@ -1,6 +1,6 @@
 #pragma once
-
 #include "router.h"
+#include "packet.h"
 #include "pc.h"
 
 class Network
@@ -76,6 +76,36 @@ public:
     }
 
     // Packet Functions
+    void transmitt_packet(Packet *p)
+    {
+        int srcPc = p->getSourcePC();
+        int destPc = p->getDestPC();
+        int srcPcRouter = pcs[p->getSourcePC()]->get_connected_router_ID();
+        int destPcRouter = pcs[p->getDestPC()]->get_connected_router_ID();
+
+        vector<int> path = allPaths[srcPcRouter][destPcRouter];
+        cout << "path: ";
+        for (auto &n : path)
+        {
+            cout << n << " ";
+        }
+        cout << endl;
+
+        if (path.empty())
+        {
+            cout << "PC " << srcPc << " -> PC" << destPc << " UNREACHABLE!\n";
+            return;
+        }
+
+        cout << "\nPacket sending started\n";
+        cout << "PC " << srcPc << " -> Router " << srcPcRouter << "\n";
+        for (int i = 0; i < path.size(); i++)
+        {
+            cout << "Packet at Router " << path[i] << "\n";
+        }
+        cout << "Router " << destPcRouter << " -> " << "PC " << destPc << "\n";
+        cout << "Packet sent successfully!\n";
+    }
 
     // ---- Links Functions
     bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
@@ -349,6 +379,7 @@ public:
             if (routers[src].status == 0)
             {
                 shortestDistances.push_back({});
+                allPaths.push_back({});
                 continue;
             }
 
