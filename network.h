@@ -1,4 +1,5 @@
 #include "router.h"
+#include "pc.h"
 
 class Network
 {
@@ -7,6 +8,7 @@ private:
     string name;
     int linksInNetwork, activeLinksInNetwork;
     vector<Router> routers;
+    vector<PC *> pcs;
     vector<vector<Link>> links;
     vector<vector<int>> shortestDistances;
     vector<vector<vector<int>>> allPaths;
@@ -53,6 +55,12 @@ public:
     int get_no_of_routers()
     {
         return routers.size();
+    }
+
+    // Add pcs
+    void add_pc_in_network(PC *pc)
+    {
+        pcs.push_back(pc);
     }
 
     // ---- Links Functions

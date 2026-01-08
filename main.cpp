@@ -1,4 +1,5 @@
 #include "network.cpp"
+#include "pc.cpp"
 
 int main()
 {
@@ -13,24 +14,27 @@ int main()
         cout << "1. Add Routers\n";
         cout << "2. Add Links\n";
 
+        // Add PC
+        cout << "3. Add PC\n";
+
         // Display / View
-        cout << "3. Display Network Details\n";
-        cout << "4. Display All Router Details\n";
-        cout << "5. Display All Link Details\n";
+        cout << "4. Display Network Details\n";
+        cout << "5. Display All Router Details\n";
+        cout << "6. Display All Link Details\n";
 
         // Failure & Recovery
-        cout << "6. Fail Link\n";
-        cout << "7. Restore Link\n";
-        cout << "8. Fail Router\n";
-        cout << "9. Restore Router\n";
+        cout << "7. Fail Link\n";
+        cout << "8. Restore Link\n";
+        cout << "9. Fail Router\n";
+        cout << "10. Restore Router\n";
 
         // Analysis
-        cout << "10. Display Shortest Distances\n";
-        cout << "11. Display Shortest Path\n";
-        cout << "12. Simulate Routing from Source\n";
+        cout << "11. Display Shortest Distances\n";
+        cout << "12. Display Shortest Path\n";
+        cout << "13. Simulate Routing from Source\n";
 
         // Exit
-        cout << "13. Exit\n";
+        cout << "14. Exit\n";
 
         cout << "Enter your option: ";
         cin >> option;
@@ -54,51 +58,58 @@ int main()
             break;
 
         case 3:
+        {
+            PC *newPC = createPC();
+            n.add_pc_in_network(newPC);
+        }
+        break;
+
+        case 4:
             n.display_network_details();
             break;
 
-        case 4:
+        case 5:
             n.display_all_router_details();
             break;
 
-        case 5:
+        case 6:
             n.display_all_links_details();
             break;
 
-        case 6:
+        case 7:
             fail_link_in_network(n);
             break;
 
-        case 7:
+        case 8:
             restore_link_in_network(n);
             break;
 
-        case 8:
+        case 9:
             fail_router_in_network(n);
             break;
 
-        case 9:
+        case 10:
             restore_router_in_network(n);
             break;
 
-        case 10:
+        case 11:
             n.display_all_shortest_distances();
             break;
 
-        case 11:
+        case 12:
             display_shortest_path(n);
             break;
 
-        case 12:
+        case 13:
             simulate_routing_from_router(n);
             break;
 
-        case 13:
+        case 14:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 
         default:
-            cout << "Invalid option! Please select between 1 and 12.\n";
+            cout << "Invalid option! Please select a valid number.\n";
         }
     }
 
