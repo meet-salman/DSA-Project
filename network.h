@@ -444,7 +444,7 @@ public:
         }
 
         // Recalculate routing based on current network state
-        calculate_shortest_paths();
+        // calculate_shortest_paths();
 
         cout << "\n===== ROUTING SIMULATION =====\n";
         cout << "Source Router: " << srcRouter << "\n\n";
