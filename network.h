@@ -11,6 +11,7 @@ private:
     vector<vector<Link>> links;
     vector<vector<int>> shortestDistances;
     vector<vector<vector<int>>> allPaths;
+    unordered_map<int, Router> mp;
 
 public:
     Network(int id, string name)
@@ -234,12 +235,12 @@ public:
     // ---- Router Functions
     bool validate_routers(int srcRouter, int destRouter)
     {
-        if (srcRouter >= routersInNetwork.size() || srcRouter <= 0)
+        if (srcRouter >= routersInNetwork.size() || srcRouter < 0)
         {
             cout << "Invalid source router ID.\n";
             return false;
         }
-        if (destRouter >= routersInNetwork.size() || destRouter <= 0)
+        if (destRouter >= routersInNetwork.size() || destRouter < 0)
         {
             cout << "Invalid destination router ID.\n";
             return false;
