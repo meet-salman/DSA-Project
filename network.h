@@ -482,4 +482,15 @@ public:
 
         cout << "==============================\n";
     }
+
+    void display_pc_details()
+    {
+        cout << "\n=========== PCs DETAILS ===========\n";
+
+        for (auto &pc : pcs)
+        {
+            pc->display_PC_details();
+        }
+        cout << "===================================\n";
+    }
 };

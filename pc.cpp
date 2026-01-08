@@ -1,5 +1,9 @@
 #include "pc.h"
 
+void send_packet()
+{
+}
+
 PC *createPC()
 {
     int id, routerID;

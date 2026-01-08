@@ -22,19 +22,22 @@ int main()
         cout << "5. Display All Router Details\n";
         cout << "6. Display All Link Details\n";
 
+        // PC Operations
+        cout << "7. Display All PC's Details\n";
+
         // Failure & Recovery
-        cout << "7. Fail Link\n";
-        cout << "8. Restore Link\n";
-        cout << "9. Fail Router\n";
-        cout << "10. Restore Router\n";
+        cout << "8. Fail Link\n";
+        cout << "9. Restore Link\n";
+        cout << "10. Fail Router\n";
+        cout << "11. Restore Router\n";
 
         // Analysis
-        cout << "11. Display Shortest Distances\n";
-        cout << "12. Display Shortest Path\n";
-        cout << "13. Simulate Routing from Source\n";
+        cout << "12. Display Shortest Distances\n";
+        cout << "13. Display Shortest Path\n";
+        cout << "14. Simulate Routing from Source\n";
 
         // Exit
-        cout << "14. Exit\n";
+        cout << "15. Exit\n";
 
         cout << "Enter your option: ";
         cin >> option;
@@ -77,34 +80,38 @@ int main()
             break;
 
         case 7:
-            fail_link_in_network(n);
+            n.display_pc_details();
             break;
 
         case 8:
-            restore_link_in_network(n);
+            fail_link_in_network(n);
             break;
 
         case 9:
-            fail_router_in_network(n);
+            restore_link_in_network(n);
             break;
 
         case 10:
-            restore_router_in_network(n);
+            fail_router_in_network(n);
             break;
 
         case 11:
-            n.display_all_shortest_distances();
+            restore_router_in_network(n);
             break;
 
         case 12:
-            display_shortest_path(n);
+            n.display_all_shortest_distances();
             break;
 
         case 13:
-            simulate_routing_from_router(n);
+            display_shortest_path(n);
             break;
 
         case 14:
+            simulate_routing_from_router(n);
+            break;
+
+        case 15:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 
