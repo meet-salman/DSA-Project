@@ -24,6 +24,7 @@ int main()
 
         // PC Operations
         cout << "7. Display All PC's Details\n";
+        cout << "8. Send Packet\n";
 
         // Failure & Recovery
         cout << "8. Fail Link\n";
@@ -62,7 +63,7 @@ int main()
 
         case 3:
         {
-            PC *newPC = createPC();
+            PC *newPC = createPC(n.generate_pc_id());
             n.add_pc_in_network(newPC);
         }
         break;
@@ -84,6 +85,10 @@ int main()
             break;
 
         case 8:
+            send_packet(n);
+            break;
+
+        case 88:
             fail_link_in_network(n);
             break;
 

@@ -1,18 +1,28 @@
+#pragma once
+#include "network.h"
 #include "pc.h"
 
-void send_packet()
+void send_packet(Network &n)
 {
+    int srcPC, destPC;
+    cout << "Enter Source PC ID: ";
+    cin >> srcPC;
+    cout << "Enter Destination PC ID: ";
+    cin >> destPC;
+
+    PC *src = n.get_pc(srcPC);
+    Packet p = *src->generate_packet(srcPC, destPC);
+
+    p.displayPacket();
 }
 
-PC *createPC()
+PC *createPC(int pcID)
 {
-    int id, routerID;
-    cout << "Enter PC ID: ";
-    cin >> id;
-    cout << "Enter Connected Router ID: ";
+    int routerID;
+    cout << "Enter router ID to connect: ";
     cin >> routerID;
 
-    PC *newPC = new PC(id, routerID);
-    cout << "Created PC " << id << ", connected to Router " << routerID << endl;
+    PC *newPC = new PC(pcID, routerID);
+    cout << "Created PC " << pcID << ", connected to Router " << routerID << endl;
     return newPC;
 }

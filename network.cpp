@@ -1,4 +1,6 @@
+
 #include "network.h"
+#include "packet.h"
 
 void add_routers_in_network(Network &n)
 {

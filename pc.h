@@ -47,4 +47,11 @@ public:
         cout << "Status: " << (status ? "Active" : "Inactive") << endl;
         cout << "-----------------------------" << endl;
     }
+
+    Packet *generate_packet(int srcPC, int destPC)
+    {
+        static int packetCounter = 1;
+        Packet *p = new Packet(packetCounter++, srcPC, destPC, -1);
+        return p;
+    }
 };

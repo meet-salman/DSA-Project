@@ -1,3 +1,5 @@
+#pragma once
+
 #include "router.h"
 #include "pc.h"
 
@@ -62,6 +64,18 @@ public:
     {
         pcs.push_back(pc);
     }
+
+    PC *get_pc(int srcPC)
+    {
+        return pcs[srcPC];
+    }
+
+    int generate_pc_id()
+    {
+        return pcs.size();
+    }
+
+    // Packet Functions
 
     // ---- Links Functions
     bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
