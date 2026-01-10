@@ -41,6 +41,82 @@ public:
              << RESET << "\n";
     }
 
+    void displayPackets(int pcID)
+    {
+        int colWidth = 12;
+        int statusWidth = 12;
+
+        cout << RESET << "\n"
+             << BG_WHITE << BLACK
+             << "------------------------------------------------------------------" << RESET << "\n";
+
+        cout << BG_WHITE << BLACK
+             << "                          PACKETS IN PC " << pcID << "                         " << RESET << "\n";
+
+        cout << BG_WHITE << BLACK
+             << "------------------------------------------------------------------" << RESET << "\n";
+
+        // -------- SENT PACKETS --------
+        cout << RESET << "\n"
+             << BG_WHITE << BLUE << BOLD
+             << "                           SENT PACKETS                           "
+             << RESET << "\n\n";
+
+        if (sentPackets.empty())
+        {
+            cout << RED << "No sent packets yet.\n"
+                 << RESET;
+        }
+        else
+        {
+            // Header
+            cout << BLUE
+                 << left << setw(colWidth) << "Src PC"
+                 << left << setw(colWidth) << "Dest PC"
+                 << left << setw(30) << "Path"
+                 << left << setw(statusWidth) << "Status"
+                 << RESET << "\n";
+
+            cout << string(colWidth + colWidth + 30 + statusWidth, '-') << "\n";
+
+            for (auto &p : sentPackets)
+            {
+                p.displayPacketDetails(false); // false = sent packets
+            }
+        }
+
+        // -------- RECEIVED PACKETS --------
+        cout << RESET << "\n"
+             << BG_WHITE << GREEN << BOLD
+             << "                         RECEIVED PACKETS                         "
+             << RESET << "\n\n";
+
+        if (receivedPackets.empty())
+        {
+            cout << RED << "No received packets yet.\n"
+                 << RESET;
+        }
+        else
+        {
+            // Header
+            cout << BLUE
+                 << left << setw(colWidth) << "Src PC"
+                 << left << setw(colWidth) << "Dest PC"
+                 << left << setw(30) << "Path"
+                 << left << setw(statusWidth) << "Status"
+                 << RESET << "\n";
+
+            cout << string(colWidth + colWidth + 30 + statusWidth, '-') << "\n";
+
+            for (auto &p : receivedPackets)
+            {
+                p.displayPacketDetails(true); // true = received packets
+            }
+        }
+
+        cout << "\n";
+    }
+
     Packet *generate_packet(int srcPC, int destPC)
     {
         static int packetCounter = 1;

@@ -71,45 +71,6 @@ void addLinksInNetwork(Network &n)
     }
 }
 
-// ===== Display Network UI Functions =====
-void displayNetworkDetails(Network &n)
-{
-    int choice;
-
-    while (true)
-    {
-        cout << BOLD << BLUE << "\n------ DISPLAY NETWORK DETAILS ------" << RESET << "\n";
-        cout << "1. Full Network Summary\n";
-        cout << "2. All Router Details\n";
-        cout << "3. All Link Details\n";
-        cout << "4. All PC Details\n";
-        cout << "0. Back to Main Menu\n";
-        cout << "Enter your choice: ";
-        cin >> choice;
-
-        switch (choice)
-        {
-        case 1:
-            n.displayNetworkDetails();
-            break;
-        case 2:
-            n.displayAllRouterDetails();
-            break;
-        case 3:
-            n.displayAllLinksDetails();
-            break;
-        case 4:
-            n.displayPCDetails();
-            break;
-        case 0:
-            return;
-        default:
-            cout << "Invalid option! Please select a valid option.\n";
-            break;
-        }
-    }
-}
-
 // ===== Link Management UI Functions =====
 void updateLinkStatus(Network &n)
 {
@@ -272,4 +233,69 @@ void sendPacket(Network &n)
     PC *src = n.getPC(srcPC);
     Packet p = *src->generate_packet(srcPC, destPC);
     n.transmitPacket(&p);
+}
+
+void showPCPackets(Network &n)
+{
+    if (!n.arePcsInNetwork())
+    {
+        cout << RED << "No PCs in network." << RESET << "\n";
+        return;
+    }
+
+    int pcID;
+    cout << "Enter PC ID to view its packets: ";
+    cin >> pcID;
+
+    PC *pc = n.getPC(pcID);
+    if (!pc)
+    {
+        cout << RED << "Invalid PC ID." << RESET << "\n";
+        return;
+    }
+
+    pc->displayPackets(pcID);
+}
+
+// ===== Display Network UI Functions =====
+void displayNetworkDetails(Network &n)
+{
+    int choice;
+
+    while (true)
+    {
+        cout << BOLD << BLUE << "\n------ DISPLAY NETWORK DETAILS ------" << RESET << "\n";
+        cout << "1. Full Network Summary\n";
+        cout << "2. All Router Details\n";
+        cout << "3. All Link Details\n";
+        cout << "4. All PC Details\n";
+        cout << "5. Display PC Packets\n";
+        cout << "0. Back to Main Menu\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            n.displayNetworkDetails();
+            break;
+        case 2:
+            n.displayAllRouterDetails();
+            break;
+        case 3:
+            n.displayAllLinksDetails();
+            break;
+        case 4:
+            n.displayPCDetails();
+            break;
+        case 5:
+            showPCPackets(n);
+            break;
+        case 0:
+            return;
+        default:
+            cout << "Invalid option! Please select a valid option.\n";
+            break;
+        }
+    }
 }

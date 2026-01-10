@@ -437,6 +437,11 @@ public:
         return pcs.size();
     }
 
+    bool arePcsInNetwork()
+    {
+        return (pcs.size() == 0 ? false : true);
+    }
+
     // ===== Packet Functions =====
     void transmitPacket(Packet *p)
     {
