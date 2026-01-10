@@ -454,6 +454,7 @@ public:
             cout << "\nPC " << srcPc << " -> PC " << destPc << " " << RED << "UNREACHABLE" << RESET << "!\n";
             cout << RED << "PACKET DROPPED!" << RESET << "\n";
             p->setStatus(DROPPED);
+            pcs[srcPc]->addPacket(p, true);
             return;
         }
 
@@ -463,6 +464,7 @@ public:
         {
             cout << "\033[2K\r";
             cout << BLUE << "Packet at Router " << path[i] << RESET << "\n";
+            p->addToPath(path[i]);
             p->setCurrentRouter(path[i]);
             p->setStatus(IN_TRANSIT);
 
@@ -479,6 +481,8 @@ public:
         cout << GREEN << "Packet DELIVERED SUCCESSFULLY!" << RESET << "\n";
 
         p->setStatus(DELIVERED);
+        pcs[srcPc]->addPacket(p, true);
+        pcs[destPc]->addPacket(p, false);
     }
 
     // ===== Shortest Path Functions (Dijkstra's Algorithm) =====

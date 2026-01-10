@@ -6,6 +6,8 @@ class PC
 private:
     int pcID;
     int connectedRouterID;
+    vector<Packet> sentPackets;
+    vector<Packet> receivedPackets;
     bool status;
 
 public:
@@ -19,6 +21,17 @@ public:
 
     void set_connected_router(int routerID) { connectedRouterID = routerID; }
     void set_status(bool newStatus) { status = newStatus; }
+
+    void addPacket(Packet *p, bool isSent)
+    {
+        if (p == nullptr)
+            return;
+
+        if (isSent)
+            sentPackets.push_back(*p);
+        else
+            receivedPackets.push_back(*p);
+    }
 
     void display_PC_details() const
     {
