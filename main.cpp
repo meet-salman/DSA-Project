@@ -1,17 +1,30 @@
-#include "network.cpp"
-#include "pc.cpp"
+#include "networkController.h"
 
 int main()
 {
-    Network n = create_network();
+    Network n = createNetwork();
+
+    int noOfRouters;
+    cout << "Enter number of routers to initialize: ";
+    cin >> noOfRouters;
+    n.initializeRouters(noOfRouters);
+
     int option;
 
     while (true)
     {
-        cout << "\n===== NETWORK MENU =====\n";
+        cout << RESET << "\n"
+             << BG_CYAN << BLACK
+             << "=============================================" << RESET << "\n";
+
+        cout << BG_CYAN << BLACK
+             << "                  MAIN MENU                  " << RESET << "\n";
+
+        cout << BG_CYAN << BLACK
+             << "=============================================" << RESET << "\n";
 
         // Network Creation
-        cout << "1. Add Routers\n";
+        cout << "1. Add Router\n";
         cout << "2. Add Links\n";
 
         // Add PC
@@ -23,22 +36,23 @@ int main()
         cout << "6. Display All Link Details\n";
 
         // PC Operations
-        cout << "7. Display All PC's Details\n";
-        cout << "8. Send Packet\n";
+        cout << "7. Display All PC Details\n";
+        cout << "8. Display Packets in PC\n";
+        cout << "9. Send Packet\n";
 
         // Failure & Recovery
-        cout << "8. Fail Link\n";
-        cout << "9. Restore Link\n";
-        cout << "10. Fail Router\n";
-        cout << "11. Restore Router\n";
+        cout << "10. Fail Link\n";
+        cout << "11. Restore Link\n";
+        cout << "12. Fail Router\n";
+        cout << "13. Restore Router\n";
 
         // Analysis
-        cout << "12. Display Shortest Distances\n";
-        cout << "13. Display Shortest Path\n";
-        cout << "14. Simulate Routing from Source\n";
+        cout << "14. Display Shortest Distances\n";
+        cout << "15. Display Shortest Path Between Two Routers\n";
+        cout << "16. Simulate Routing from Source Router\n";
 
         // Exit
-        cout << "15. Exit\n";
+        cout << "17. Exit\n";
 
         cout << "Enter your option: ";
         cin >> option;
@@ -54,70 +68,70 @@ int main()
         switch (option)
         {
         case 1:
-            add_routers_in_network(n);
+            addRoutersInNetwork(n);
             break;
 
         case 2:
-            add_links_in_network(n);
+            addLinksInNetwork(n);
             break;
 
         case 3:
-        {
-            PC *newPC = createPC(n.generate_pc_id(), n);
-            if (newPC != nullptr)
-                n.add_pc_in_network(newPC);
-        }
-        break;
+            addPCInNetwork(n);
+            break;
 
         case 4:
-            n.display_network_details();
+            n.displayNetworkDetails();
             break;
 
         case 5:
-            n.display_all_router_details();
+            n.displayAllRouterDetails();
             break;
 
         case 6:
-            n.display_all_links_details();
+            n.displayAllLinksDetails();
             break;
 
         case 7:
-            n.display_pc_details();
+            n.displayPCDetails();
             break;
 
         case 8:
-            send_packet(n);
-            break;
-
-        case 88:
-            fail_link_in_network(n);
+            // showPCPackets(n);
             break;
 
         case 9:
-            restore_link_in_network(n);
+            sendPacket(n);
             break;
 
         case 10:
-            fail_router_in_network(n);
+            failLinkInNetwork(n);
             break;
 
         case 11:
-            restore_router_in_network(n);
+            restoreLinkInNetwork(n);
             break;
 
         case 12:
-            n.display_all_shortest_distances();
+            failRouterInNetwork(n);
             break;
 
         case 13:
-            display_shortest_path(n);
+            restoreRouterInNetwork(n);
             break;
 
         case 14:
-            simulate_routing_from_router(n);
+            n.displayAllShortestDistances();
             break;
 
         case 15:
+            displayShortestPath(n);
+            break;
+
+        case 16:
+            simulateRoutingFromRouter(n);
+            break;
+
+        case 17:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 

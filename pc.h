@@ -9,43 +9,23 @@ private:
     bool status;
 
 public:
-    PC(int pcID, int routerID, bool active = true) : status(true)
+    PC(int pcID, int routerID, bool active = true) : pcID(pcID), connectedRouterID(routerID), status(active)
     {
-        this->pcID = pcID;
-        this->connectedRouterID = routerID;
     }
 
-    int get_PC_ID() const
-    {
-        return pcID;
-    }
+    int get_PC_ID() const { return pcID; }
+    int get_connected_router_ID() const { return connectedRouterID; }
+    bool is_active() const { return status; }
 
-    int get_connected_router_ID() const
-    {
-        return connectedRouterID;
-    }
-
-    bool is_active() const
-    {
-        return status;
-    }
-
-    void set_connected_router(int routerID)
-    {
-        connectedRouterID = routerID;
-    }
-
-    void set_status(bool status)
-    {
-        status = status;
-    }
+    void set_connected_router(int routerID) { connectedRouterID = routerID; }
+    void set_status(bool newStatus) { status = newStatus; }
 
     void display_PC_details() const
     {
-        cout << "PC ID: " << pcID << endl;
-        cout << "Connected Router ID: " << connectedRouterID << endl;
-        cout << "Status: " << (status ? "Active" : "Inactive") << endl;
-        cout << "-----------------------------" << endl;
+        cout << WHITE << left << setw(10) << pcID
+             << WHITE << setw(20) << connectedRouterID
+             << (status ? (GREEN "Active") : (RED "Inactive"))
+             << RESET << "\n";
     }
 
     Packet *generate_packet(int srcPC, int destPC)

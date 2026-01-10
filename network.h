@@ -2,13 +2,16 @@
 #include "router.h"
 #include "packet.h"
 #include "pc.h"
+#include "Link.h" // Or the correct file where class Link is defined
 
 class Network
 {
 private:
     int id;
     string name;
-    int linksInNetwork, activeLinksInNetwork;
+    int linksInNetwork;
+    int activeLinksInNetwork;
+    int activeRoutersInNetwork;
     vector<Router> routers;
     vector<PC *> pcs;
     vector<vector<Link>> links;
@@ -16,51 +19,460 @@ private:
     vector<vector<vector<int>>> allPaths;
 
 public:
-    Network(int id, string name)
+    Network(int id, string name) : id(id), name(name), linksInNetwork(0), activeLinksInNetwork(0), activeRoutersInNetwork(0) {}
+
+    // ===== Initialization Methods =====
+    void initializeRouters(int numberOfRouters)
     {
-        this->id = id;
-        this->name = name;
-        this->linksInNetwork = 0;
-        this->activeLinksInNetwork = 0;
+        addRoutersInBulk(routers.size(), numberOfRouters);
 
         cout << BG_BLUE << WHITE << BOLD
-             << "------------------------------------------" << RESET << "\n";
+             << "\n------------------------------------------" << RESET << "\n";
         cout << BG_BLUE << WHITE << BOLD
              << "     NETWORK ESTABLISHED SUCCESSFULLY     " << RESET << "\n";
         cout << BG_BLUE << WHITE << BOLD
              << "------------------------------------------" << RESET << "\n";
 
-        int noOfRouters;
-        cout << "Enter no of routers to initialized: ";
-        cin >> noOfRouters;
-
-        // Initializing routers
-        add_routers_in_bulk(0, noOfRouters - 1);
-
-        display_network_details();
+        displayNetworkDetails();
     }
 
-    void display_network_details()
+    // ===== Display Methods =====
+    void displayNetworkDetails()
     {
-        cout << BG_WHITE << BLUE << BOLD
-             << "\n                 NETWORK                  " << RESET << "\n";
-        cout << "------------------------------------------\n";
+        cout << RESET << "\n"
+             << BG_WHITE << BLUE << BOLD
+             << "                 NETWORK                  "
+             << RESET << "\n";
 
-        cout << "Network ID: " << id << endl
-             << "Network Name: " << name << endl
-             << "Routers in Network: " << routers.size() << " Routers" << endl
-             << "Actice Links in Network: " << activeLinksInNetwork << " Links" << endl;
+        cout << BOLD << CYAN
+             << "------------------------------------------"
+             << RESET << "\n";
 
-        cout << "------------------------------------------\n";
+        cout << BLUE << "Network ID: " << RESET << id << "\n"
+             << BLUE << "Network Name: " << RESET << name << "\n\n";
+
+        // Routers info
+        cout << GREEN << "Routers in Network: " << RESET
+             << routers.size() << "\n";
+
+        cout << GREEN << "Active Routers: " << RESET
+             << activeRoutersInNetwork << "\n";
+
+        cout << RED << "Failed Routers: " << RESET
+             << (routers.size() - activeRoutersInNetwork) << "\n\n";
+
+        // Links info
+        cout << GREEN << "Links in Network: " << RESET
+             << linksInNetwork << "\n";
+
+        cout << GREEN << "Active Links: " << RESET
+             << activeLinksInNetwork << "\n";
+
+        cout << RED << "Failed Links: " << RESET
+             << (linksInNetwork - activeLinksInNetwork) << "\n";
+
+        cout << BOLD << CYAN
+             << "------------------------------------------"
+             << RESET << "\n";
     }
 
-    int get_no_of_routers()
+    void displayAllRouterDetails()
     {
-        return routers.size();
+        cout << RESET << "\n"
+             << BG_WHITE << BLUE << BOLD
+             << "             ROUTER DETAILS             "
+             << RESET << "\n";
+
+        if (routers.empty())
+        {
+            cout << BOLD << RED
+                 << "No routers in the network."
+                 << RESET << "\n";
+            return;
+        }
+
+        cout << BOLD
+             << BLUE << left << setw(15) << "Router ID"
+             << GREEN << setw(15) << "Status"
+             << RESET << "\n";
+
+        cout << BOLD << CYAN
+             << "---------------------------------------"
+             << RESET << "\n";
+
+        for (auto &router : routers)
+        {
+            router.displayRouterInfo();
+        }
+
+        cout << BOLD << CYAN
+             << "---------------------------------------"
+             << RESET << "\n";
     }
 
-    // Add pcs
-    void add_pc_in_network(PC *pc)
+    void displayAllLinksDetails()
+    {
+        cout << RESET << "\n"
+             << BG_WHITE << BLUE << BOLD
+             << "                  LINKS IN NETWORK                   " << RESET << "\n";
+        cout << BOLD << CYAN << "------------------------------------------------------" << RESET << "\n";
+
+        for (int i = 0; i < links.size(); i++)
+        {
+            cout << BRIGHT_BLUE
+                 << "Router " << i << " connections:"
+                 << RESET << "\n";
+
+            if (links[i].empty())
+            {
+                cout << "  No links.\n";
+                continue;
+            }
+
+            for (const auto &link : links[i])
+            {
+                cout << "  -> Connected Router: " << link.getConnectedRouter()
+                     << ", Distance: " << link.getDistance()
+                     << ", Status: "
+                     << (link.isActive() ? GREEN "ACTIVE" : RED "FAILED")
+                     << RESET << endl;
+            }
+            cout << endl;
+        }
+        cout << BOLD << CYAN << "------------------------------------------------------" << RESET << "\n";
+    }
+
+    void displayPCDetails()
+    {
+        if (pcs.empty())
+        {
+            cout << RED << "No PCs in the network." << RESET << "\n";
+            return;
+        }
+
+        // Table Title
+        cout << RESET << "\n"
+             << BG_WHITE << BLUE << BOLD
+             << "                PCs DETAILS                  "
+             << RESET << "\n\n";
+
+        // Table Header
+        cout << BLUE << BOLD
+             << left << setw(10) << "PC ID"
+             << setw(20) << "Connected Router"
+             << setw(10) << "Status"
+             << RESET << "\n";
+
+        // Separator
+        cout << CYAN
+             << "---------------------------------------------"
+             << RESET << "\n";
+
+        // Table Rows
+        for (auto &pc : pcs)
+            pc->display_PC_details();
+
+        // Footer Separator
+        cout << CYAN
+             << "---------------------------------------------"
+             << RESET << "\n";
+    }
+
+    // ===== Router Management =====
+    int getNumberOfRouters() { return routers.size(); }
+
+    void addRouter(int routerId)
+    {
+        routers.push_back(Router(routerId));
+        activeRoutersInNetwork++;
+
+        cout << YELLOW << "Installing Router " << routerId << RESET;
+        loading(0);
+
+        cout << "\r"
+             << GREEN << "Router " << routerId << " Installed successfully!"
+             << RESET << "\n";
+    }
+
+    void addRoutersInBulk(int startID, int endID)
+    {
+        cout << "\n";
+        for (int id = startID; id < endID; id++)
+            addRouter(id);
+    }
+
+    bool validateRouters(int srcRouter, int destRouter)
+    {
+        if (srcRouter < 0 || srcRouter >= routers.size())
+        {
+            cout << RED << "Invalid source router ID." << RESET << "\n";
+            return false;
+        }
+        if (destRouter < 0 || destRouter >= routers.size())
+        {
+            cout << RED << "Invalid destination router ID." << RESET << "\n";
+            return false;
+        }
+        return true;
+    }
+
+    bool validateDistance(int distance)
+    {
+        if (distance <= 0)
+        {
+            cout << RED << "Invalid distance" << RESET << "\n";
+            return false;
+        }
+        return true;
+    }
+
+    void failRouter(int routerId)
+    {
+        if (routerId >= routers.size())
+        {
+            cout << RED << "Invalid router ID." << RESET << "\n";
+            return;
+        }
+
+        if (!routers[routerId].getStatus())
+        {
+            cout << "Router " << routerId
+                 << RED << " ALREADY FAILED"
+                 << RESET << "!\n";
+            return;
+        }
+
+        routers[routerId].setStatus(false);
+        activeRoutersInNetwork--;
+
+        if (activeLinksInNetwork >= 2)
+            calculateShortestPaths();
+
+        cout << "Router " << routerId << " "
+             << RED << "FAILED"
+             << RESET << "!\n";
+    }
+
+    void restoreRouter(int routerId)
+    {
+        if (routerId >= routers.size())
+        {
+            cout << RED << "Invalid router ID." << RESET << "\n";
+            return;
+        }
+
+        if (routers[routerId].getStatus())
+        {
+            cout << "Router " << routerId
+                 << GREEN << " ALREADY ACTIVE"
+                 << RESET << "!\n";
+
+            return;
+        }
+
+        routers[routerId].setStatus(true);
+
+        if (activeLinksInNetwork >= 2)
+            calculateShortestPaths();
+
+        cout << "Router " << routerId << " "
+             << GREEN << "RESTORED SUCCESSFULLY"
+             << RESET << "!\n";
+    }
+
+    // ===== Link Management =====
+    bool createLink(int srcRouter, int destRouter, int distance, bool isBiDirectional)
+    {
+        links.resize(routers.size());
+
+        if (!validateRouters(srcRouter, destRouter) || !validateDistance(distance))
+            return false;
+
+        links[srcRouter].push_back(Link(destRouter, distance, isBiDirectional));
+        return true;
+    }
+
+    void unidirectionalLink(int srcRouter, int destRouter, int distance, bool isLast)
+    {
+        if (createLink(srcRouter, destRouter, distance, false))
+        {
+            cout << GREEN
+                 << "Unidirectional link added from Router " << srcRouter
+                 << " -> Router " << destRouter
+                 << RESET << endl;
+
+            linksInNetwork++;
+            activeLinksInNetwork++;
+
+            if (isLast && activeLinksInNetwork >= 2)
+                calculateShortestPaths();
+        }
+    }
+
+    void bidirectionalLink(int srcRouter, int destRouter, int distance, bool isLast)
+    {
+        if (createLink(srcRouter, destRouter, distance, true) &&
+            createLink(destRouter, srcRouter, distance, true))
+        {
+            cout << GREEN
+                 << "Bidirectional link added between Router " << srcRouter
+                 << " <-> Router " << destRouter
+                 << RESET << endl;
+
+            linksInNetwork++;
+            activeLinksInNetwork++;
+
+            if (isLast && activeLinksInNetwork >= 2)
+                calculateShortestPaths();
+        }
+    }
+
+    void failLink(int srcRouter, int destRouter, int distance)
+    {
+        if (!validateRouters(srcRouter, destRouter) || !validateDistance(distance))
+            return;
+
+        bool biDirectional = false;
+        bool linkFound = false;
+
+        // ---- Fail link from src -> dest ----
+        for (auto &link : links[srcRouter])
+        {
+            if (link.validateLink(destRouter, distance))
+            {
+                linkFound = true;
+
+                if (!link.isActive())
+                {
+                    cout << "Link " << srcRouter
+                         << (link.isBidirectional() ? " <-> " : " -> ")
+                         << destRouter << " "
+                         << RED << "ALREADY FAILED"
+                         << RESET << "!\n";
+                    return;
+                }
+
+                link.setStatus(false);
+                biDirectional = link.isBidirectional();
+                break;
+            }
+        }
+
+        // ---- Invalid link ----
+        if (!linkFound)
+        {
+            cout << RED << "Invalid Link!" << RESET << "\n";
+            return;
+        }
+
+        // ---- Fail reverse link if bidirectional ----
+        if (biDirectional)
+        {
+            for (auto &link : links[destRouter])
+            {
+                if (link.validateLink(srcRouter, distance))
+                {
+                    link.setStatus(false);
+                    break;
+                }
+            }
+
+            cout << "Link from Router " << srcRouter
+                 << " <-> Router " << destRouter
+                 << " with distance " << distance
+                 << " " << RED << "FAILED"
+                 << RESET << "!\n";
+        }
+        else
+        {
+            cout << "Link from Router " << srcRouter
+                 << " -> Router " << destRouter
+                 << " with distance " << distance
+                 << " " << RED << "FAILED"
+                 << RESET << "!\n";
+        }
+
+        // ---- Update network ----
+        activeLinksInNetwork--;
+        if (activeLinksInNetwork >= 2)
+            calculateShortestPaths();
+    }
+
+    void restoreLink(int srcRouter, int destRouter, int distance)
+    {
+        if (!validateRouters(srcRouter, destRouter) || !validateDistance(distance))
+            return;
+
+        bool linkFound = false;
+        bool biDirectional = false;
+
+        // ---- Restore src -> dest link ----
+        for (auto &link : links[srcRouter])
+        {
+            if (link.validateLink(destRouter, distance))
+            {
+                linkFound = true;
+
+                if (link.isActive())
+                {
+                    cout << "Link " << srcRouter
+                         << (link.isBidirectional() ? " <-> " : " -> ")
+                         << destRouter << " "
+                         << GREEN << "ALREADY ACTIVE"
+                         << RESET << "!\n";
+                    return;
+                }
+
+                link.setStatus(true);
+                biDirectional = link.isBidirectional();
+                break;
+            }
+        }
+
+        // ---- Invalid link ----
+        if (!linkFound)
+        {
+            cout << RED << "Invalid Link!" << RESET << "\n";
+            return;
+        }
+
+        // ---- Restore reverse link if bidirectional ----
+        if (biDirectional)
+        {
+            for (auto &link : links[destRouter])
+            {
+                if (link.validateLink(srcRouter, distance))
+                {
+                    link.setStatus(true);
+                    break;
+                }
+            }
+
+            cout << "Link from Router " << srcRouter
+                 << " <-> Router " << destRouter
+                 << " with distance " << distance
+                 << " "
+                 << GREEN << "RESTORED SUCCESSFULLY"
+                 << RESET << "!\n";
+        }
+        else
+        {
+            cout << "Link from Router " << srcRouter
+                 << " -> Router " << destRouter
+                 << " with distance " << distance
+                 << " "
+                 << GREEN << "RESTORED SUCCESSFULLY"
+                 << RESET << "!\n";
+        }
+
+        // ---- Update network ----
+        activeLinksInNetwork++;
+        if (activeLinksInNetwork >= 2)
+            calculateShortestPaths();
+    }
+
+    // ===== PC Management =====
+    void addPCInNetwork(PC *pc)
     {
         int connectedRouter = pc->get_connected_router_ID();
 
@@ -73,18 +485,21 @@ public:
         pcs.push_back(pc);
     }
 
-    PC *get_pc(int srcPC)
+    PC *getPC(int pcID)
     {
-        return pcs[srcPC];
+        if (pcID < 0 || pcID >= pcs.size())
+            return nullptr;
+
+        return pcs[pcID];
     }
 
-    int generate_pc_id()
+    int generatePCID()
     {
         return pcs.size();
     }
 
-    // Packet Functions
-    void transmitt_packet(Packet *p)
+    // ===== Packet Functions =====
+    void transmitPacket(Packet *p)
     {
         int srcPc = p->getSourcePC();
         int destPc = p->getDestPC();
@@ -92,299 +507,50 @@ public:
         int destPcRouter = pcs[p->getDestPC()]->get_connected_router_ID();
 
         vector<int> path = allPaths[srcPcRouter][destPcRouter];
-        // cout << "path: ";
-        // for (auto &n : path)
-        // {
-        //     cout << n << " ";
-        // }
-        // cout << endl;
 
+        cout << GREEN << "\nPacket sending started" << RESET;
+        loading(500);
         if (path.empty())
         {
-            cout << "PC " << srcPc << " -> PC" << destPc << " UNREACHABLE!\n";
+            cout << "\nPC " << srcPc << " -> PC " << destPc << " " << RED << "UNREACHABLE" << RESET << "!\n";
+            cout << RED << "PACKET DROPPED!" << RESET << "\n";
+            p->setStatus(DROPPED);
             return;
         }
 
-        cout << "\nPacket sending started\n";
-        cout << "PC " << srcPc << " -> Router " << srcPcRouter << "\n";
+        cout << BLUE << "\nPC " << srcPc << " -> Router " << srcPcRouter << RESET << "\n";
+
         for (int i = 0; i < path.size(); i++)
         {
-            cout << "Packet at Router " << path[i] << "\n";
-        }
-        cout << "Router " << destPcRouter << " -> " << "PC " << destPc << "\n";
-        cout << "Packet sent successfully!\n";
-    }
+            cout << "\033[2K\r";
+            cout << BLUE << "Packet at Router " << path[i] << RESET << "\n";
+            p->setCurrentRouter(path[i]);
+            p->setStatus(IN_TRANSIT);
 
-    // ---- Links Functions
-    bool create_link(int srcRouter, int destRouter, int distance, bool isBiDirectional)
-    {
-        links.resize(routers.size());
-
-        if (!validate_routers(srcRouter, destRouter))
-            return false;
-
-        // Validate distance
-        if (distance <= 0)
-        {
-            cout << "Invalid distance\n";
-            return false;
-        }
-
-        links[srcRouter].push_back(Link(destRouter, distance, isBiDirectional));
-        return true;
-        // cout << "\nrouter " << srcRouter << " -> " << links[destRouter][0].connectedRouter << " at dis " << links[destRouter][0].distance << " " << links[destRouter][0].status << endl;
-    }
-
-    void unidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional, bool isLast)
-    {
-        if (create_link(srcRouter, destRouter, distance, isBiDirectional))
-        {
-            cout << "Unidirectional link added from Router " << srcRouter
-                 << " -> Router " << destRouter << endl;
-
-            linksInNetwork++;
-            activeLinksInNetwork++;
-
-            if (isLast && activeLinksInNetwork >= 2)
-                calculate_shortest_paths();
-        }
-    }
-
-    void bidirectional_link(int srcRouter, int destRouter, int distance, bool isBiDirectional, bool isLast)
-    {
-        if (create_link(srcRouter, destRouter, distance, isBiDirectional) && create_link(destRouter, srcRouter, distance, isBiDirectional))
-        {
-            cout << "Bidirectional link added between Router " << srcRouter
-                 << " <-> Router " << destRouter << endl;
-
-            linksInNetwork++;
-            activeLinksInNetwork++;
-
-            if (isLast && activeLinksInNetwork >= 2)
-                calculate_shortest_paths();
-        }
-    }
-
-    void fail_link(int srcRouter, int destRouter, int distance)
-    {
-        if (!validate_routers(srcRouter, destRouter))
-            return;
-
-        bool biDirectional = false;
-        bool failed = false;
-
-        for (auto &link : links[srcRouter])
-        {
-            if (link.connectedRouter == destRouter && link.distance == distance)
+            if (i + 1 < path.size())
             {
-                if (link.status == 1)
-                {
-                    link.status = 0;
-                    biDirectional = link.isBiDirectional;
-                    failed = true;
-                }
-                else
-                {
-                    cout << "Router " << srcRouter
-                         << (link.isBiDirectional ? " <-> " : " -> ")
-                         << destRouter << " Link already failed!\n";
-                    return;
-                }
+                cout << YELLOW << "sending to Router " << path[i + 1] << RESET;
+                loading(500);
             }
         }
+        cout << YELLOW << "Router " << destPcRouter << " -> forwarding to PC " << destPc << RESET;
+        loading(500);
+        cout << "\033[2K\r";
+        cout << BLUE << "Packet arrived at PC " << destPc << RESET << "\n";
+        cout << GREEN << "Packet DELIVERED SUCCESSFULLY!" << RESET << "\n";
 
-        if (biDirectional)
-        {
-            for (auto &link : links[destRouter])
-            {
-                if (link.connectedRouter == srcRouter && link.distance == distance)
-                {
-                    link.status = 0;
-                    cout << "Router " << srcRouter << " <-> " << destRouter << " Linked failed!\n";
-                }
-            }
-        }
-        else
-            cout << "Router " << srcRouter << " -> " << destRouter << " Linked failed!\n";
-
-        if (failed)
-        {
-            activeLinksInNetwork--;
-            calculate_shortest_paths();
-        }
+        p->setStatus(DELIVERED);
     }
 
-    void restore_link(int srcRouter, int destRouter, int distance)
-    {
-        if (!validate_routers(srcRouter, destRouter))
-            return;
-
-        bool biDirectional = false;
-        bool restored = false;
-
-        for (auto &link : links[srcRouter])
-        {
-            if (link.connectedRouter == destRouter && link.distance == distance)
-            {
-                if (link.status == 0)
-                {
-                    link.status = 1;
-                    biDirectional = link.isBiDirectional;
-                    restored = true;
-                }
-                else
-                {
-                    cout << "Router " << srcRouter
-                         << (link.isBiDirectional ? " <-> " : " -> ")
-                         << destRouter << " Linked already active!\n";
-                    return;
-                }
-            }
-        }
-
-        if (biDirectional)
-        {
-            for (auto &link : links[destRouter])
-            {
-                if (link.connectedRouter == srcRouter && link.distance == distance)
-                {
-                    link.status = 1;
-                    cout << "Router " << srcRouter << " <-> " << destRouter << " Linked restored successfully!\n";
-                }
-            }
-        }
-        else
-            cout << "Router " << srcRouter << " -> " << destRouter << " Linked restored successfully!\n";
-
-        if (restored)
-        {
-            activeLinksInNetwork++;
-            calculate_shortest_paths();
-        }
-    }
-
-    void display_all_links_details()
-    {
-        cout << BG_WHITE << BLUE << BOLD
-             << "\n              LINKS IN NETWORK                       " << RESET << "\n";
-        cout << "-----------------------------------------------------\n";
-
-        for (int i = 0; i < links.size(); i++)
-        {
-            cout << "Router " << i << " connections:\n";
-
-            if (links[i].empty())
-            {
-                cout << "  No links.\n";
-                continue;
-            }
-
-            for (const auto &link : links[i])
-            {
-                cout << "  -> Connected Router: " << link.connectedRouter
-                     << ", Distance: " << link.distance
-                     << ", Status: " << (link.status ? "ACTIVE" : "FAILED") << endl;
-            }
-            cout << endl;
-        }
-        cout << "-----------------------------------------------------\n";
-    }
-
-    // ---- Router Functions
-    bool validate_routers(int srcRouter, int destRouter)
-    {
-        if (srcRouter < 0 || srcRouter >= routers.size())
-        {
-            cout << "Invalid source router ID.\n";
-            return false;
-        }
-        if (destRouter < 0 || destRouter >= routers.size())
-        {
-            cout << "Invalid destination router ID.\n";
-            return false;
-        }
-        return true;
-    }
-
-    void add_router(int routerId)
-    {
-        routers.push_back(Router(routerId));
-    }
-
-    void add_routers_in_bulk(int startID, int endID)
-    {
-        for (int id = startID; id <= endID; id++)
-            add_router(id);
-    }
-
-    void fail_router(int routerId)
-    {
-        if (routerId >= routers.size())
-        {
-            cout << "Invalid router ID.\n";
-            return;
-        }
-
-        if (!routers[routerId].status)
-        {
-            cout << "Router " << routerId << " already failed!\n";
-            return;
-        }
-        else
-        {
-            routers[routerId].status = 0;
-            calculate_shortest_paths();
-            cout << "Router " << routerId << " failed!\n";
-        }
-    }
-
-    void restore_router(int routerId)
-    {
-        if (routerId >= routers.size())
-        {
-            cout << "Invalid router ID.\n";
-            return;
-        }
-
-        if (routers[routerId].status)
-        {
-            cout << "Router " << routerId << " already active!\n";
-            return;
-        }
-        else
-        {
-            routers[routerId].status = 1;
-            calculate_shortest_paths();
-            cout << "Router " << routerId << " restored successfully!\n";
-        }
-    }
-
-    void display_all_router_details()
-    {
-        cout << "\n========== ROUTER DETAILS ==========\n";
-
-        if (routers.empty())
-        {
-            cout << "No routers in the network.\n";
-            return;
-        }
-
-        for (auto &router : routers)
-            router.display_router_info();
-
-        cout << "===================================\n";
-    }
-
-    // ---- Shortest path functions
-    void calculate_shortest_paths()
+    // ===== Shortest Path Functions (Dijkstra's Algorithm) =====
+    void calculateShortestPaths()
     {
         shortestDistances.clear();
         allPaths.clear();
 
         for (int src = 0; src < routers.size(); src++)
         {
-            // failed router
-            if (routers[src].status == 0)
+            if (!routers[src].getStatus())
             {
                 shortestDistances.push_back({});
                 allPaths.push_back({});
@@ -413,14 +579,15 @@ public:
 
                 for (auto &link : links[currentNode])
                 {
-                    if (link.status == 0)
+                    if (!link.isActive())
                         continue;
 
-                    int neighbour = link.connectedRouter;
-                    int neighbourDistance = link.distance;
+                    int neighbour = link.getConnectedRouter();
+                    int neighbourDistance = link.getDistance();
                     int distanceToNeighbour = distanceToCurrentNode + neighbourDistance;
 
-                    if (!explored[neighbour] && routers[neighbour].status != 0 && distanceToNeighbour < distance[neighbour])
+                    if (!explored[neighbour] && routers[neighbour].getStatus() &&
+                        distanceToNeighbour < distance[neighbour])
                     {
                         distance[neighbour] = distanceToNeighbour;
                         parent[neighbour] = currentNode;
@@ -428,20 +595,19 @@ public:
                     }
                 }
             }
-            // Add src Shortest Distances
+
             shortestDistances.push_back(distance);
 
-            vector<vector<int>> distsFromSrc(routers.size());
+            vector<vector<int>> pathsFromSrc(routers.size());
 
             for (int dest = 0; dest < routers.size(); dest++)
             {
                 if (distance[dest] == INT_MAX)
-                    continue; // no path exists
+                    continue;
 
                 vector<int> path;
                 int current = dest;
 
-                // stop when reached at source
                 while (current != -1)
                 {
                     path.push_back(current);
@@ -449,14 +615,14 @@ public:
                 }
 
                 reverse(path.begin(), path.end());
-                distsFromSrc[dest] = path;
+                pathsFromSrc[dest] = path;
             }
-            // Add src paths to all nodes
-            allPaths.push_back(distsFromSrc);
+
+            allPaths.push_back(pathsFromSrc);
         }
     }
 
-    void display_router_shortest_path(int srcRouter, int destRouter)
+    void displayRouterShortestPath(int srcRouter, int destRouter)
     {
         cout << "\n======== SHORTEST PATH ========\n";
         cout << "Router " << srcRouter << " -> " << destRouter << endl;
@@ -469,81 +635,129 @@ public:
 
         for (auto &next : allPaths[srcRouter][destRouter])
             cout << next << " ";
+        cout << "\n";
     }
 
-    void display_all_shortest_distances()
+    void displayAllShortestDistances()
     {
-        cout << "\n======== SHORTEST DISTANCES ========\n";
+        int colWidth = 8;
+
+        // Table Title
+        cout << RESET << "\n"
+             << BG_WHITE << BLUE << BOLD
+             << "                SHORTEST DISTANCES                "
+             << RESET << "\n\n";
+
+        // Header row: Destination routers
+        cout << BOLD << BLUE << left << setw(colWidth) << "Src\\Dest";
+        for (int dest = 0; dest < shortestDistances.size(); dest++)
+        {
+            if (!routers[dest].getStatus())
+                continue;
+            cout << GREEN << setw(colWidth) << dest << RESET;
+        }
+        cout << "\n";
+
+        // Separator row
+        cout << BOLD << CYAN << left << "";
+        for (int dest = 0; dest < shortestDistances.size(); dest++)
+        {
+            if (!routers[dest].getStatus())
+                continue;
+            cout << string(colWidth, '-'); // print exact width dashes
+        }
+        cout << RESET << "\n";
+
+        // Table Rows
         for (int src = 0; src < shortestDistances.size(); src++)
         {
-            if (routers[src].status == 0)
+            if (!routers[src].getStatus())
                 continue;
 
-            cout << "Router " << src << ": ";
-            for (auto &distance : shortestDistances[src])
-            {
-                cout << ((distance == INT_MAX) ? string("-") : to_string(distance)) << " ";
-            }
+            // Source router column
+            cout << BLUE << left << setw(colWidth) << src << RESET;
 
-            cout << endl;
+            // Distances to all destination routers
+            for (int dest = 0; dest < shortestDistances[src].size(); dest++)
+            {
+                if (!routers[dest].getStatus())
+                    continue;
+
+                string distStr = (shortestDistances[src][dest] == INT_MAX) ? "-" : to_string(shortestDistances[src][dest]);
+                cout << left << setw(colWidth) << distStr;
+            }
+            cout << "\n";
         }
-        cout << "======================================\n";
+
+        // Footer separator
+        cout << BOLD << CYAN;
+        cout << string(colWidth * routers.size() + 1, '-'); // match total width
+        cout << RESET << "\n";
     }
 
-    void simulate_routing(int srcRouter)
+    void simulateRouting(int srcRouter)
     {
+        int colWidth = 15;
+        int pathWidth = 30;
+        int distWidth = 15;
+
         if (srcRouter < 0 || srcRouter >= routers.size())
         {
-            cout << "Invalid source router.\n";
+            cout << RED << "Invalid source router.\n"
+                 << RESET;
             return;
         }
 
-        if (routers[srcRouter].status == 0)
+        if (!routers[srcRouter].getStatus())
         {
-            cout << "Source router is FAILED. Cannot simulate routing.\n";
+            cout << RED << "Router " << srcRouter << " is FAILED. Cannot simulate routing.\n"
+                 << RESET;
             return;
         }
 
-        // Recalculate routing based on current network state
-        // calculate_shortest_paths();
+        cout << RESET << "\n"
+             << BG_WHITE << BLACK
+             << "------------------------------------------------------------" << RESET << "\n";
+        cout << BG_WHITE << BLACK
+             << "                     ROUTING SIMULATION                     " << RESET << "\n";
+        cout << BG_WHITE << BLACK
+             << "------------------------------------------------------------" << RESET << "\n\n";
 
-        cout << "\n===== ROUTING SIMULATION =====\n";
-        cout << "Source Router: " << srcRouter << "\n\n";
+        cout << BOLD << BLUE
+             << left << setw(colWidth) << "Dest Router"
+             << left << setw(pathWidth) << "Path"
+             << left << setw(distWidth) << "Distance/Status"
+             << RESET << "\n";
 
+        cout << CYAN << string(colWidth + pathWidth + distWidth, '-') << RESET << "\n";
+
+        // Print routing info
         for (int dest = 0; dest < routers.size(); dest++)
         {
             if (dest == srcRouter)
                 continue;
 
-            if (routers[dest].status == 0 ||
-                shortestDistances[srcRouter][dest] == INT_MAX)
+            cout << left << setw(colWidth) << dest;
+
+            if (!routers[dest].getStatus() || shortestDistances[srcRouter][dest] == INT_MAX)
             {
-                cout << "Router " << dest << " : UNREACHABLE\n";
+                cout << left << setw(pathWidth) << "-"
+                     << RED << left << setw(distWidth) << "UNREACHABLE" << RESET << "\n";
                 continue;
             }
 
-            // Print path
+            // Build path string
+            string pathStr;
             for (int i = 0; i < allPaths[srcRouter][dest].size(); i++)
             {
-                cout << allPaths[srcRouter][dest][i];
+                pathStr += to_string(allPaths[srcRouter][dest][i]);
                 if (i + 1 < allPaths[srcRouter][dest].size())
-                    cout << " -> ";
+                    pathStr += "->";
             }
-
-            cout << "   Distance: " << shortestDistances[srcRouter][dest] << "\n";
+            cout << left << setw(pathWidth) << pathStr;
+            cout << left << setw(distWidth) << shortestDistances[srcRouter][dest] << "\n";
         }
 
-        cout << "==============================\n";
-    }
-
-    void display_pc_details()
-    {
-        cout << "\n=========== PCs DETAILS ===========\n";
-
-        for (auto &pc : pcs)
-        {
-            pc->display_PC_details();
-        }
-        cout << "===================================\n";
+        cout << CYAN << string(colWidth + pathWidth + distWidth, '-') << RESET << "\n";
     }
 };

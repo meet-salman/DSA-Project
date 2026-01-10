@@ -1,5 +1,6 @@
 #pragma once
 #include <bits/stdc++.h>
+#include <iomanip>
 using namespace std;
 
 // ANSI color codes
@@ -31,3 +32,12 @@ using namespace std;
 #define BG_MAGENTA "\033[45m"
 #define BG_CYAN "\033[46m"
 #define BG_WHITE "\033[47m"
+
+void loading(int time)
+{
+    for (int i = 0; i < 2; i++)
+    {
+        cout << "." << flush;
+        this_thread::sleep_for(chrono::milliseconds(time));
+    }
+}

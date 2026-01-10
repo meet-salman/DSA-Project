@@ -1,15 +1,40 @@
-#include "template.h"
+#pragma once
+#include "common.h"
 
 class Link
 {
-public:
+private:
     int connectedRouter;
     int distance;
     bool isBiDirectional;
-    bool status; // failed or alive
+    bool status;
 
-    Link(int connectedRouter, int distance, bool isBiDirectional) : connectedRouter(connectedRouter), distance(distance), status(true), isBiDirectional{isBiDirectional}
+public:
+    Link(int connectedRouter, int distance, bool isBiDirectional)
+        : connectedRouter(connectedRouter), distance(distance),
+          isBiDirectional(isBiDirectional), status(true)
     {
-        cout << "Router " << connectedRouter << " connected successfully!\n";
+    }
+
+    int getConnectedRouter() const { return connectedRouter; }
+    int getDistance() const { return distance; }
+    bool isBidirectional() const { return isBiDirectional; }
+    bool isActive() const { return status; }
+
+    void setStatus(bool newStatus) { status = newStatus; }
+
+    bool validateLink(int connectedRouter, int distance)
+    {
+        if (connectedRouter != this->connectedRouter || distance != this->distance)
+            return false;
+
+        return true;
+    }
+
+    void displayLinkInfo() const
+    {
+        cout << "  -> Connected Router: " << connectedRouter
+             << ", Distance: " << distance
+             << ", Status: " << (status ? "ACTIVE" : "FAILED") << endl;
     }
 };

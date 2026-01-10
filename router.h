@@ -1,38 +1,34 @@
-#include "link.h"
+#pragma once
+#include "common.h"
 
 class Router
 {
-public:
+private:
     int id;
-    bool status; // failed or alive
+    bool status; // true = alive, false = failed
 
+public:
     Router(int id) : id(id), status(true)
     {
-        cout << "Router " << id << " added in network successfully!\n";
     }
 
-    int get_id()
-    {
-        return id;
-    }
+    int getId() const { return id; }
+    bool getStatus() const { return status; }
+    void setStatus(bool newStatus) { status = newStatus; }
 
-    bool get_status()
+    void displayRouterInfo() const
     {
-        return status;
-    }
-
-    void display_router_info()
-    {
-        // cout << "Router ID: " << id << endl;
-        // cout << "Status   : " << (status ? "ACTIVE" : "FAILED") << endl;
-
-        cout << "Router ID: " << id << " | Status: ";
+        cout << BLUE << left << setw(15) << id;
 
         if (status)
-            cout << "ALIVE";
+        {
+            cout << GREEN << setw(15) << "ALIVE";
+        }
         else
-            cout << "FAILED";
+        {
+            cout << RED << setw(15) << "FAILED";
+        }
 
-        cout << '\n';
+        cout << RESET << "\n";
     }
 };
