@@ -327,32 +327,33 @@ public:
         }
     }
 
-    void failLink(int srcRouter, int destRouter, int distance)
+    void setLinkStatus(int srcRouter, int destRouter, int distance, bool newStatus)
     {
         if (!validateRouters(srcRouter, destRouter) || !validateDistance(distance))
             return;
 
-        bool biDirectional = false;
         bool linkFound = false;
+        bool biDirectional = false;
 
-        // ---- Fail link from src -> dest ----
+        // ---- Update src -> dest ----
         for (auto &link : links[srcRouter])
         {
             if (link.validateLink(destRouter, distance))
             {
                 linkFound = true;
 
-                if (!link.isActive())
+                if (link.isActive() == newStatus)
                 {
                     cout << "Link " << srcRouter
                          << (link.isBidirectional() ? " <-> " : " -> ")
                          << destRouter << " "
-                         << RED << "ALREADY FAILED"
+                         << (newStatus ? GREEN : RED)
+                         << (newStatus ? "ALREADY ACTIVE" : "ALREADY FAILED")
                          << RESET << "!\n";
                     return;
                 }
 
-                link.setStatus(false);
+                link.setStatus(newStatus);
                 biDirectional = link.isBidirectional();
                 break;
             }
@@ -365,110 +366,46 @@ public:
             return;
         }
 
-        // ---- Fail reverse link if bidirectional ----
+        // ---- Update reverse link if bidirectional ----
         if (biDirectional)
         {
             for (auto &link : links[destRouter])
             {
                 if (link.validateLink(srcRouter, distance))
                 {
-                    link.setStatus(false);
+                    link.setStatus(newStatus);
                     break;
                 }
             }
-
-            cout << "Link from Router " << srcRouter
-                 << " <-> Router " << destRouter
-                 << " with distance " << distance
-                 << " " << RED << "FAILED"
-                 << RESET << "!\n";
         }
+
+        // ---- Message ----
+        cout << "Link from Router " << srcRouter
+             << (biDirectional ? " <-> " : " -> ")
+             << "Router " << destRouter
+             << " with distance " << distance << " "
+             << (newStatus ? GREEN : RED)
+             << (newStatus ? "RESTORED SUCCESSFULLY" : "FAILED")
+             << RESET << "!\n";
+
+        // ---- Update counts & routing ----
+        if (newStatus)
+            activeLinksInNetwork++;
         else
-        {
-            cout << "Link from Router " << srcRouter
-                 << " -> Router " << destRouter
-                 << " with distance " << distance
-                 << " " << RED << "FAILED"
-                 << RESET << "!\n";
-        }
+            activeLinksInNetwork--;
 
-        // ---- Update network ----
-        activeLinksInNetwork--;
         if (activeLinksInNetwork >= 2)
             calculateShortestPaths();
     }
 
+    void failLink(int srcRouter, int destRouter, int distance)
+    {
+        setLinkStatus(srcRouter, destRouter, distance, false);
+    }
+
     void restoreLink(int srcRouter, int destRouter, int distance)
     {
-        if (!validateRouters(srcRouter, destRouter) || !validateDistance(distance))
-            return;
-
-        bool linkFound = false;
-        bool biDirectional = false;
-
-        // ---- Restore src -> dest link ----
-        for (auto &link : links[srcRouter])
-        {
-            if (link.validateLink(destRouter, distance))
-            {
-                linkFound = true;
-
-                if (link.isActive())
-                {
-                    cout << "Link " << srcRouter
-                         << (link.isBidirectional() ? " <-> " : " -> ")
-                         << destRouter << " "
-                         << GREEN << "ALREADY ACTIVE"
-                         << RESET << "!\n";
-                    return;
-                }
-
-                link.setStatus(true);
-                biDirectional = link.isBidirectional();
-                break;
-            }
-        }
-
-        // ---- Invalid link ----
-        if (!linkFound)
-        {
-            cout << RED << "Invalid Link!" << RESET << "\n";
-            return;
-        }
-
-        // ---- Restore reverse link if bidirectional ----
-        if (biDirectional)
-        {
-            for (auto &link : links[destRouter])
-            {
-                if (link.validateLink(srcRouter, distance))
-                {
-                    link.setStatus(true);
-                    break;
-                }
-            }
-
-            cout << "Link from Router " << srcRouter
-                 << " <-> Router " << destRouter
-                 << " with distance " << distance
-                 << " "
-                 << GREEN << "RESTORED SUCCESSFULLY"
-                 << RESET << "!\n";
-        }
-        else
-        {
-            cout << "Link from Router " << srcRouter
-                 << " -> Router " << destRouter
-                 << " with distance " << distance
-                 << " "
-                 << GREEN << "RESTORED SUCCESSFULLY"
-                 << RESET << "!\n";
-        }
-
-        // ---- Update network ----
-        activeLinksInNetwork++;
-        if (activeLinksInNetwork >= 2)
-            calculateShortestPaths();
+        setLinkStatus(srcRouter, destRouter, distance, true);
     }
 
     // ===== PC Management =====
