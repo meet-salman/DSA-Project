@@ -71,6 +71,45 @@ void addLinksInNetwork(Network &n)
     }
 }
 
+// ===== Display Network UI Functions =====
+void displayNetworkDetails(Network &n)
+{
+    int choice;
+
+    while (true)
+    {
+        cout << BOLD << BLUE << "\n------ DISPLAY NETWORK DETAILS ------" << RESET << "\n";
+        cout << "1. Full Network Summary\n";
+        cout << "2. All Router Details\n";
+        cout << "3. All Link Details\n";
+        cout << "4. All PC Details\n";
+        cout << "0. Back to Main Menu\n";
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice)
+        {
+        case 1:
+            n.displayNetworkDetails();
+            break;
+        case 2:
+            n.displayAllRouterDetails();
+            break;
+        case 3:
+            n.displayAllLinksDetails();
+            break;
+        case 4:
+            n.displayPCDetails();
+            break;
+        case 0:
+            return;
+        default:
+            cout << "Invalid option! Please select a valid option.\n";
+            break;
+        }
+    }
+}
+
 // ===== Link Management UI Functions =====
 void updateLinkStatus(Network &n)
 {
@@ -90,7 +129,8 @@ void updateLinkStatus(Network &n)
     cout << "\nChoose Action:\n";
     cout << "1. Fail Link\n";
     cout << "2. Restore Link\n";
-    cout << "Enter choice (1 or 2): ";
+    cout << "0. Back to Main Menu\n";
+    cout << "Enter your option: ";
     cin >> choice;
 
     switch (choice)
@@ -101,8 +141,11 @@ void updateLinkStatus(Network &n)
     case 2:
         n.restoreLink(srcRouter, destRouter, distance);
         break;
+    case 0:
+        return;
     default:
-        cout << RED << "Invalid choice! Please enter 1 or 2." << RESET << "\n";
+        cout << "Invalid option! Please select a valid option.\n";
+
         break;
     }
 
@@ -123,7 +166,8 @@ void updateRouterStatus(Network &n)
     cout << "Choose Action:\n";
     cout << "1. Fail Router\n";
     cout << "2. Restore Router\n";
-    cout << "Enter choice (1 or 2): ";
+    cout << "0. Back to Main Menu\n";
+    cout << "Enter your option: ";
     cin >> choice;
 
     switch (choice)
@@ -134,8 +178,10 @@ void updateRouterStatus(Network &n)
     case 2:
         n.restoreRouter(routerId);
         break;
+    case 0:
+        return;
     default:
-        cout << RED << "Invalid choice! Please enter 1 or 2." << RESET << "\n";
+        cout << "Invalid option! Please select a valid option.\n";
         break;
     }
 

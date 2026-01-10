@@ -32,25 +32,21 @@ int main()
 
         // Display / View
         cout << "4. Display Network Details\n";
-        cout << "5. Display All Router Details\n";
-        cout << "6. Display All Link Details\n";
 
         // PC Operations
-        cout << "7. Display All PC Details\n";
-        cout << "8. Display Packets in PC\n";
-        cout << "9. Send Packet\n";
+        cout << "5. Send Packet\n";
 
         // Failure & Recovery
-        cout << "10. Update Link Status\n";
-        cout << "11. Update Router Status\n";
+        cout << "6. Update Link Status\n";
+        cout << "7. Update Router Status\n";
 
         // Analysis
-        cout << "12. Display Shortest Distances\n";
-        cout << "13. Display Shortest Path Between Two Routers\n";
-        cout << "14. Simulate Routing from Source Router\n";
+        cout << "8. Display Shortest Distances\n";
+        cout << "9. Display Shortest Path Between Two Routers\n";
+        cout << "10. Simulate Routing from Source Router\n";
 
         // Exit
-        cout << "15. Exit\n";
+        cout << "11. Exit\n";
 
         cout << "Enter your option: ";
         cin >> option;
@@ -78,55 +74,43 @@ int main()
             break;
 
         case 4:
-            n.displayNetworkDetails();
+            displayNetworkDetails(n);
             break;
+
+            // case 8:
+            //     // showPCPackets(n);
+            //     break;
 
         case 5:
-            n.displayAllRouterDetails();
-            break;
-
-        case 6:
-            n.displayAllLinksDetails();
-            break;
-
-        case 7:
-            n.displayPCDetails();
-            break;
-
-        case 8:
-            // showPCPackets(n);
-            break;
-
-        case 9:
             sendPacket(n);
             break;
 
-        case 10:
+        case 6:
             updateLinkStatus(n);
             break;
 
-        case 11:
+        case 7:
             updateRouterStatus(n);
             break;
 
-        case 12:
+        case 8:
             n.displayAllShortestDistances();
             break;
 
-        case 13:
+        case 9:
             displayShortestPath(n);
             break;
 
-        case 14:
+        case 10:
             simulateRoutingFromRouter(n);
             break;
 
-        case 15:
+        case 11:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 
         default:
-            cout << "Invalid option! Please select a valid number.\n";
+            cout << "Invalid option! Please select a valid option.\n";
         }
     }
 

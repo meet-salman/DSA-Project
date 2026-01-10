@@ -78,6 +78,12 @@ public:
 
     void displayAllRouterDetails()
     {
+        if (activeRoutersInNetwork == 0)
+        {
+            cout << RED << "No active routers in the network." << RESET << "\n";
+            return;
+        }
+
         cout << RESET << "\n"
              << BG_WHITE << BLUE << BOLD
              << "             ROUTER DETAILS             "
@@ -112,6 +118,12 @@ public:
 
     void displayAllLinksDetails()
     {
+        if (activeLinksInNetwork == 0)
+        {
+            cout << RED << "No active links in the network." << RESET << "\n";
+            return;
+        }
+
         cout << RESET << "\n"
              << BG_WHITE << BLUE << BOLD
              << "                  LINKS IN NETWORK                   " << RESET << "\n";
