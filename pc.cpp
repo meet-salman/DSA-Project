@@ -34,11 +34,17 @@ void send_packet(Network &n)
     n.transmitt_packet(&p);
 }
 
-PC *createPC(int pcID)
+PC *createPC(int pcID, Network n)
 {
     int routerID;
     cout << "Enter router ID to connect: ";
     cin >> routerID;
+
+    if (routerID < 0 || routerID >= n.get_no_of_routers())
+    {
+        cout << "Invalid connected router ID.\n";
+        return nullptr;
+    }
 
     PC *newPC = new PC(pcID, routerID);
     cout << "Created PC " << pcID << ", connected to Router " << routerID << endl;

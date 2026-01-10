@@ -63,8 +63,9 @@ int main()
 
         case 3:
         {
-            PC *newPC = createPC(n.generate_pc_id());
-            n.add_pc_in_network(newPC);
+            PC *newPC = createPC(n.generate_pc_id(), n);
+            if (newPC != nullptr)
+                n.add_pc_in_network(newPC);
         }
         break;
 

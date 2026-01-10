@@ -62,6 +62,14 @@ public:
     // Add pcs
     void add_pc_in_network(PC *pc)
     {
+        int connectedRouter = pc->get_connected_router_ID();
+
+        if (connectedRouter < 0 || connectedRouter >= routers.size())
+        {
+            cout << "Invalid connected router ID.\n";
+            delete pc;
+            return;
+        }
         pcs.push_back(pc);
     }
 
@@ -84,12 +92,12 @@ public:
         int destPcRouter = pcs[p->getDestPC()]->get_connected_router_ID();
 
         vector<int> path = allPaths[srcPcRouter][destPcRouter];
-        cout << "path: ";
-        for (auto &n : path)
-        {
-            cout << n << " ";
-        }
-        cout << endl;
+        // cout << "path: ";
+        // for (auto &n : path)
+        // {
+        //     cout << n << " ";
+        // }
+        // cout << endl;
 
         if (path.empty())
         {
