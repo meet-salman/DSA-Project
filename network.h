@@ -226,58 +226,48 @@ public:
         return true;
     }
 
-    void failRouter(int routerId)
+    void setRouterStatus(int routerId, bool newStatus)
     {
-        if (routerId >= routers.size())
+        if (routerId < 0 || routerId >= routers.size())
         {
             cout << RED << "Invalid router ID." << RESET << "\n";
             return;
         }
 
-        if (!routers[routerId].getStatus())
+        if (routers[routerId].getStatus() == newStatus)
         {
-            cout << "Router " << routerId
-                 << RED << " ALREADY FAILED"
+            cout << "Router " << routerId << " "
+                 << (newStatus ? GREEN : RED)
+                 << (newStatus ? "ALREADY ACTIVE" : "ALREADY FAILED")
                  << RESET << "!\n";
             return;
         }
 
-        routers[routerId].setStatus(false);
-        activeRoutersInNetwork--;
+        // Set status
+        routers[routerId].setStatus(newStatus);
 
+        // Update active routers count
+        activeRoutersInNetwork += (newStatus ? 1 : -1);
+
+        // Recalculate paths if network is active enough
         if (activeLinksInNetwork >= 2)
             calculateShortestPaths();
 
+        // Display message
         cout << "Router " << routerId << " "
-             << RED << "FAILED"
+             << (newStatus ? GREEN : RED)
+             << (newStatus ? "RESTORED SUCCESSFULLY" : "FAILED")
              << RESET << "!\n";
+    }
+
+    void failRouter(int routerId)
+    {
+        setRouterStatus(routerId, false);
     }
 
     void restoreRouter(int routerId)
     {
-        if (routerId >= routers.size())
-        {
-            cout << RED << "Invalid router ID." << RESET << "\n";
-            return;
-        }
-
-        if (routers[routerId].getStatus())
-        {
-            cout << "Router " << routerId
-                 << GREEN << " ALREADY ACTIVE"
-                 << RESET << "!\n";
-
-            return;
-        }
-
-        routers[routerId].setStatus(true);
-
-        if (activeLinksInNetwork >= 2)
-            calculateShortestPaths();
-
-        cout << "Router " << routerId << " "
-             << GREEN << "RESTORED SUCCESSFULLY"
-             << RESET << "!\n";
+        setRouterStatus(routerId, true);
     }
 
     // ===== Link Management =====

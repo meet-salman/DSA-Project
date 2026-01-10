@@ -110,20 +110,36 @@ void updateLinkStatus(Network &n)
 }
 
 // ===== Router Management UI Functions =====
-void failRouterInNetwork(Network &n)
+void updateRouterStatus(Network &n)
 {
     int routerId;
-    cout << "\nEnter router ID: ";
-    cin >> routerId;
-    n.failRouter(routerId);
-}
+    int choice;
 
-void restoreRouterInNetwork(Network &n)
-{
-    int routerId;
-    cout << "\nEnter router ID: ";
+    cout << BOLD << BLUE << "\n------ UPDATE ROUTER STATUS ------" << RESET << "\n";
+
+    cout << "Enter Router ID: ";
     cin >> routerId;
-    n.restoreRouter(routerId);
+
+    cout << "Choose Action:\n";
+    cout << "1. Fail Router\n";
+    cout << "2. Restore Router\n";
+    cout << "Enter choice (1 or 2): ";
+    cin >> choice;
+
+    switch (choice)
+    {
+    case 1:
+        n.failRouter(routerId);
+        break;
+    case 2:
+        n.restoreRouter(routerId);
+        break;
+    default:
+        cout << RED << "Invalid choice! Please enter 1 or 2." << RESET << "\n";
+        break;
+    }
+
+    cout << BOLD << BLUE "-----------------------------------\n";
 }
 
 // ===== Routing Analysis UI Functions =====
