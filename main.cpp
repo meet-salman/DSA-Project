@@ -41,18 +41,17 @@ int main()
         cout << "9. Send Packet\n";
 
         // Failure & Recovery
-        cout << "10. Fail Link\n";
-        cout << "11. Restore Link\n";
-        cout << "12. Fail Router\n";
-        cout << "13. Restore Router\n";
+        cout << "10. Update Link Status\n";
+        cout << "11. Fail Router\n";
+        cout << "12. Restore Router\n";
 
         // Analysis
-        cout << "14. Display Shortest Distances\n";
-        cout << "15. Display Shortest Path Between Two Routers\n";
-        cout << "16. Simulate Routing from Source Router\n";
+        cout << "13. Display Shortest Distances\n";
+        cout << "14. Display Shortest Path Between Two Routers\n";
+        cout << "15. Simulate Routing from Source Router\n";
 
         // Exit
-        cout << "17. Exit\n";
+        cout << "16. Exit\n";
 
         cout << "Enter your option: ";
         cin >> option;
@@ -104,34 +103,30 @@ int main()
             break;
 
         case 10:
-            failLinkInNetwork(n);
+            updateLinkStatus(n);
             break;
 
         case 11:
-            restoreLinkInNetwork(n);
-            break;
-
-        case 12:
             failRouterInNetwork(n);
             break;
 
-        case 13:
+        case 12:
             restoreRouterInNetwork(n);
             break;
 
-        case 14:
+        case 13:
             n.displayAllShortestDistances();
             break;
 
-        case 15:
+        case 14:
             displayShortestPath(n);
             break;
 
-        case 16:
+        case 15:
             simulateRoutingFromRouter(n);
             break;
 
-        case 17:
+        case 16:
             cout << "Exiting program. Goodbye!\n";
             return 0;
 

@@ -72,30 +72,41 @@ void addLinksInNetwork(Network &n)
 }
 
 // ===== Link Management UI Functions =====
-void failLinkInNetwork(Network &n)
+void updateLinkStatus(Network &n)
 {
     int srcRouter, destRouter, distance;
-    cout << "\nEnter source router: ";
+    int choice;
+
+    cout << BOLD << BLUE << "\n------ UPDATE LINK STATUS ------" << RESET << "\n";
+    cout << "Enter Source Router ID: ";
     cin >> srcRouter;
-    cout << "Enter destination router: ";
+
+    cout << "Enter Destination Router ID: ";
     cin >> destRouter;
-    cout << "Enter distance: ";
+
+    cout << "Enter Distance of the Link: ";
     cin >> distance;
 
-    n.failLink(srcRouter, destRouter, distance);
-}
+    cout << "\nChoose Action:\n";
+    cout << "1. Fail Link\n";
+    cout << "2. Restore Link\n";
+    cout << "Enter choice (1 or 2): ";
+    cin >> choice;
 
-void restoreLinkInNetwork(Network &n)
-{
-    int srcRouter, destRouter, distance;
-    cout << "\nEnter source router: ";
-    cin >> srcRouter;
-    cout << "Enter destination router: ";
-    cin >> destRouter;
-    cout << "Enter distance: ";
-    cin >> distance;
+    switch (choice)
+    {
+    case 1:
+        n.failLink(srcRouter, destRouter, distance);
+        break;
+    case 2:
+        n.restoreLink(srcRouter, destRouter, distance);
+        break;
+    default:
+        cout << RED << "Invalid choice! Please enter 1 or 2." << RESET << "\n";
+        break;
+    }
 
-    n.restoreLink(srcRouter, destRouter, distance);
+    cout << BOLD << BLUE << "--------------------------------" << RESET << "\n";
 }
 
 // ===== Router Management UI Functions =====
