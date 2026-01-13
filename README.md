@@ -16,7 +16,6 @@ A C++ educational simulator demonstrating graph-based routing by implementing Di
 
 - Language: C++ (C++11+ recommended)
 - Build tools: g++, MSVC, or compatible C++ compiler
-- Standard library containers: `vector`, `unordered_map`, `priority_queue`, etc.
 
 ## Algorithm Explanation
 
@@ -26,32 +25,6 @@ Dijkstra’s algorithm computes shortest paths from a source node to all other n
 
 This simulator models the single-source SPF computation component used by OSPF routers: after building a topology (LSDB in OSPF), routers run an SPF algorithm to derive a shortest-path tree and determine next-hop forwarding entries. The simulator intentionally omits OSPF protocol mechanisms (LSA exchange, timers).
 
-## Project Structure
-
-Top-level files include `main.cpp` and headers such as `network.h`, `router.h`, `packet.h`. A recommended structure tree and explanations are provided in the repository's documentation.
-
-## Build & Run Instructions
-
-Build with g++:
-
-```bash
-g++ -std=c++11 -O2 main.cpp -o routing_sim
-```
-
-Run:
-
-```bash
-./routing_sim
-```
-
-On Windows with MSVC (Developer Command Prompt):
-
-```powershell
-cl /EHsc /O2 main.cpp
-main.exe
-```
-
-Note: Adjust compilation commands according to your project layout and additional source files.
 
 ## Sample Usage
 
@@ -60,19 +33,11 @@ Note: Adjust compilation commands according to your project layout and additiona
 - Inject packets and observe logged forwarding steps.
 - Simulate a link failure and re-run to see updated routes.
 
-## Limitations
 
-- Not a full OSPF implementation; lacks LSA flooding, areas, and protocol mechanics.
-- No real network interfaces; simulation only.
-- Decrease-key not natively implemented in `std::priority_queue` (uses push-with-check approach).
+## Contributing
 
-## Future Improvements
+Feel free to explore the repository and contribute to make IMS even better! If you have any questions or suggestions that would make this better, don't hesitate to reach out. Happy coding! 
 
-- Incremental SPF updates.
-- LSA simulation and LSDB modeling.
-- Visualization tool.
-- Performance optimizations and large-scale testing.
+## Contact
 
-## License
-
-[LICENSE placeholder] — choose an appropriate open-source license (e.g., MIT, Apache-2.0) before public release.
+Salman Ahmed - [@Linkedin](https://www.linkedin.com/in/salman-ahmed-538897291/) - say2salmanahmed@gmail.com
