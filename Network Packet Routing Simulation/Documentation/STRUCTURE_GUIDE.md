@@ -1,3 +1,6 @@
+<a name="readme-top"></a>
+
+
 # Project Structure Guide
 
 ## File Organization
@@ -68,8 +71,7 @@ Packet                           (Data unit)
 ## Class Diagram
 
 ```
-
-```
+<img align="center" src="class_diagram.png" />
 
 ---
 
@@ -129,4 +131,4 @@ User Interface / networkController.h, main.cpp
 
 
 
-End of `PROJECT_GUIDE.md`.
+<p align="right">(<a href="#readme-top">back to top</a>)</p>   
