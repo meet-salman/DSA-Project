@@ -72,6 +72,8 @@ Packet                           (Data unit)
 
 ```
 <img align="center" src="class_diagram.png" />
+```
+---
 
 ---
 
