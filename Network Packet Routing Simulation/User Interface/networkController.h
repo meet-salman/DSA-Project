@@ -1,5 +1,5 @@
 #pragma once
-#include "network.h"
+#include "../Data Models/network.h"
 
 // ===== Network UI Functions =====
 Network createNetwork()

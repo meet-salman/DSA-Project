@@ -2,7 +2,7 @@
 #include "router.h"
 #include "packet.h"
 #include "pc.h"
-#include "Link.h" // Or the correct file where class Link is defined
+#include "link.h"
 
 class Network
 {

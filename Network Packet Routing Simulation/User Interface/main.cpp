@@ -77,10 +77,6 @@ int main()
             displayNetworkDetails(n);
             break;
 
-            // case 8:
-            //     // showPCPackets(n);
-            //     break;
-
         case 5:
             sendPacket(n);
             break;
